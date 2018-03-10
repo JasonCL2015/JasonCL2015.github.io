@@ -1,0 +1,1064 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="RestFulAPI,幂等性" />
+
+
+
+
+
+  <link rel="alternate" href="/atom.xml" title="JasonCui's blog" type="application/atom+xml" />
+
+
+
+
+
+
+<meta name="description" content="关于分布式系统中接口幂等性设计的介绍">
+<meta name="keywords" content="RestFulAPI,幂等性">
+<meta property="og:type" content="article">
+<meta property="og:title" content="分布式接口幂等性设计">
+<meta property="og:url" content="http://jasoncui.com/分布式接口幂等性设计.html">
+<meta property="og:site_name" content="JasonCui&#39;s blog">
+<meta property="og:description" content="关于分布式系统中接口幂等性设计的介绍">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2018-02-24T03:58:01.353Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="分布式接口幂等性设计">
+<meta name="twitter:description" content="关于分布式系统中接口幂等性设计的介绍">
+
+<script>
+    (function(){
+        if(''){
+            if (prompt('请输入文章密码') !== ''){
+                alert('密码错误！');
+                history.back();
+            }
+        }
+    })();
+</script>
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    version: '5.1.4',
+    sidebar: {"position":"right","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://jasoncui.com/分布式接口幂等性设计.html"/>
+
+
+
+
+
+  <title>分布式接口幂等性设计 | JasonCui's blog</title>
+  
+
+
+
+
+
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?8e687d8adb739b368d6d70e1d149c872";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-right page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">JasonCui's blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">Think And Code</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about" rel="section">
+            
+            关于
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://jasoncui.com/分布式接口幂等性设计.html">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="JasonCui">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/uploads/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="JasonCui's blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">分布式接口幂等性设计</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2016-12-19T14:07:36+08:00">
+                2016-12-19
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Java/" itemprop="url" rel="index">
+                    <span itemprop="name">Java</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/分布式接口幂等性设计.html#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="分布式接口幂等性设计.html" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+             <span id="/分布式接口幂等性设计.html" class="leancloud_visitors" data-flag-title="分布式接口幂等性设计">
+               <span class="post-meta-divider">|</span>
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+               
+                 <span class="post-meta-item-text">阅读次数&#58;</span>
+               
+                 <span class="leancloud-visitors-count"></span>
+             </span>
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <blockquote class="blockquote-center"><br>    关于分布式系统中接口幂等性设计的介绍<br></blockquote>
+
+
+
+<a id="more"></a>
+<h2 id="一、幂等性定义"><a href="#一、幂等性定义" class="headerlink" title="一、幂等性定义"></a>一、幂等性定义</h2><p>HTTP/1.1规范中幂等性的定义是：<br>Methods can also have the property of “idempotence” in that (aside from error or expiration issues) the side-effects of N &gt; 0 identical requests is the same as for a single request.<br>从定义上看，HTTP方法的幂等性是指一次和多次请求某一个资源应该具有同样的副作用。<br>更多介绍请阅读<a href="http://www.cnblogs.com/weidagang2046/archive/2011/06/04/idempotence.html" target="_blank" rel="noopener">理解HTTP幂等性</a></p>
+<h2 id="二、接口中幂等性设计"><a href="#二、接口中幂等性设计" class="headerlink" title="二、接口中幂等性设计"></a>二、接口中幂等性设计</h2><h4 id="查询操作"><a href="#查询操作" class="headerlink" title="查询操作"></a><em>查询操作</em></h4><p>查询一次和查询多次，在数据不变的情况下，查询结果是一样的，select是天然的幂等操作。</p>
+<h4 id="删除操作"><a href="#删除操作" class="headerlink" title="删除操作"></a><em>删除操作</em></h4><p>删除操作也是幂等的，删除一次和多次删除都是把数据删除。(注意可能返回结果不一样，删除的数据不存在，返回0，删除的数据多条，返回结果多个)。 </p>
+<h4 id="唯一索引，防止新增脏数据"><a href="#唯一索引，防止新增脏数据" class="headerlink" title="唯一索引，防止新增脏数据"></a><em>唯一索引，防止新增脏数据</em></h4><p>比如：支付宝的资金账户，支付宝也有用户账户，每个用户只能有一个资金账户，怎么防止给用户创建资金账户多个，那么给资金账户表中的用户ID加唯一索引，所以一个用户新增成功一个资金账户记录。</p>
+<h4 id="token机制，防止页面重复提交"><a href="#token机制，防止页面重复提交" class="headerlink" title="token机制，防止页面重复提交"></a><em>token机制，防止页面重复提交</em></h4><p>业务要求：<br>页面的数据只能被点击提交一次<br>发生原因：<br>由于重复点击或者网络重发，或者nginx重发等情况会导致数据被重复提交<br>解决办法：<br>集群环境：采用token加redis（redis单线程的，处理需要排队）<br>单JVM环境：采用token加redis或token加jvm内存<br>处理流程： </p>
+<ol>
+<li>数据提交前要向服务的申请token，token放到redis或jvm内存，token有效时间 </li>
+<li>提交后后台校验token，同时删除token，生成新的token返回<br>token特点：<br>要申请，一次有效性，可以限流<br>注意：redis要用删除操作来判断token，删除成功代表token校验通过，如果用select+delete来校验token，存在并发问题，不建议使用 </li>
+</ol>
+<h4 id="悲观锁"><a href="#悲观锁" class="headerlink" title="悲观锁"></a><em>悲观锁</em></h4><p>获取数据的时候加锁获取<br>  <figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">select</span> * <span class="keyword">from</span> table_xxx <span class="keyword">where</span> <span class="keyword">id</span>=<span class="string">'xxx'</span> <span class="keyword">for</span> <span class="keyword">update</span>;</span><br></pre></td></tr></table></figure></p>
+<p>注意：id字段一定是主键或者唯一索引，不然是锁表，会死人的<br>悲观锁使用时一般伴随事务一起使用，数据锁定时间可能会很长，根据实际情况选用 </p>
+<h4 id="乐观锁"><a href="#乐观锁" class="headerlink" title="乐观锁"></a><em>乐观锁</em></h4><p>乐观锁只是在更新数据那一刻锁表，其他时间不锁表，所以相对于悲观锁，效率更高。 </p>
+<p>乐观锁的实现方式多种多样可以通过version或者其他状态条件： </p>
+<ol>
+<li><p>通过版本号实现 </p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">update</span> table_xxx <span class="keyword">set</span> <span class="keyword">name</span>=#<span class="keyword">name</span>#,<span class="keyword">version</span>=<span class="keyword">version</span>+<span class="number">1</span> <span class="keyword">where</span> <span class="keyword">version</span>=#<span class="keyword">version</span>#</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>通过条件限制 </p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">update</span> table_xxx <span class="keyword">set</span> avai_amount=avai_amount-#subAmount# <span class="keyword">where</span> avai_amount-#subAmount# &gt;= <span class="number">0</span></span><br></pre></td></tr></table></figure>
+</li>
+</ol>
+<p>要求：quality-#subQuality# &gt;= ，这个情景适合不用版本号，只更新是做数据安全校验，适合库存模型，扣份额和回滚份额，性能更高 </p>
+<p>注意：乐观锁的更新操作，最好用主键或者唯一索引来更新,这样是行锁，否则更新时会锁表，上面两个sql改成下面的两个更好<br>  <figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">update</span> table_xxx <span class="keyword">set</span> <span class="keyword">name</span>=#<span class="keyword">name</span>#,<span class="keyword">version</span>=<span class="keyword">version</span>+<span class="number">1</span> <span class="keyword">where</span> <span class="keyword">id</span>=#<span class="keyword">id</span># <span class="keyword">and</span> <span class="keyword">version</span>=#<span class="keyword">version</span># </span><br><span class="line"><span class="keyword">update</span> table_xxx <span class="keyword">set</span> avai_amount=avai_amount-#subAmount# <span class="keyword">where</span> <span class="keyword">id</span>=#<span class="keyword">id</span># <span class="keyword">and</span> avai_amount-#subAmount# &gt;= <span class="number">0</span></span><br></pre></td></tr></table></figure></p>
+<h4 id="分布式锁"><a href="#分布式锁" class="headerlink" title="分布式锁"></a><em>分布式锁</em></h4><p>还是拿插入数据的例子，如果是分布是系统，构建全局唯一索引比较困难，例如唯一性的字段没法确定，这时候可以引入分布式锁，通过第三方的系统(redis或zookeeper)，在业务系统插入数据或者更新数据，获取分布式锁，然后做操作，之后释放锁，这样其实是把多线程并发的锁的思路，引入多多个系统，也就是分布式系统中得解决思路。 </p>
+<p>要点：某个长流程处理过程要求不能并发执行，可以在流程执行之前根据某个标志(用户ID+后缀等)获取分布式锁，其他流程执行时获取锁就会失败，也就是同一时间该流程只能有一个能执行成功，执行完成后，释放分布式锁(分布式锁要第三方系统提供) </p>
+<h4 id="select-insert"><a href="#select-insert" class="headerlink" title="select + insert"></a><em>select + insert</em></h4><p>并发不高的后台系统，或者一些任务JOB，为了支持幂等，支持重复执行，简单的处理方法是，先查询下一些关键数据，判断是否已经执行过，在进行业务处理，就可以了<br>注意：核心高并发流程不要用这种方法 </p>
+<h4 id="状态机幂等"><a href="#状态机幂等" class="headerlink" title="状态机幂等"></a><em>状态机幂等</em></h4><p>在设计单据相关的业务，或者是任务相关的业务，肯定会涉及到状态机(状态变更图)，就是业务单据上面有个状态，状态在不同的情况下会发生变更，一般情况下存在有限状态机，这时候，如果状态机已经处于下一个状态，这时候来了一个上一个状态的变更，理论上是不能够变更的，这样的话，保证了有限状态机的幂等。 </p>
+<p>注意：订单等单据类业务，存在很长的状态流转，一定要深刻理解状态机，对业务系统设计能力提高有很大帮助 </p>
+<h4 id="对外提供接口的api如何保证幂等"><a href="#对外提供接口的api如何保证幂等" class="headerlink" title="对外提供接口的api如何保证幂等"></a><em>对外提供接口的api如何保证幂等</em></h4><p>如银联提供的付款接口：需要接入商户提交付款请求时附带：source来源，seq序列号<br>source+seq在数据库里面做唯一索引，防止多次付款，(并发时，只能处理一个请求) </p>
+<p><strong>重点：</strong><br>对外提供接口为了支持幂等调用，接口有两个字段必须传，一个是来源source，一个是来源方序列号seq，这个两个字段在提供方系统里面做联合唯一索引，这样当第三方调用时，先在本方系统里面查询一下，是否已经处理过，返回相应处理结果；没有处理过，进行相应处理，返回结果。注意，为了幂等友好，一定要先查询一下，是否处理过该笔业务，不查询直接插入业务系统，会报错，但实际已经处理了。 </p>
+<blockquote>
+<p>参考阅读</p>
+<ul>
+<li><a href="http://825635381.iteye.com/blog/2276077" target="_blank" rel="noopener">高并发的核心技术-幂等性实现方案</a></li>
+</ul>
+</blockquote>
+
+      
+    </div>
+    
+    
+    
+
+
+    
+      <div>
+        
+      </div>
+    
+
+    
+
+    
+      <div>
+        <div style="padding: 10px 0; margin: 20px auto; width: 90%; text-align: center;">
+  <div>如果觉得我的文章对您有用，请随意打赏。您的支持将鼓励我继续创作！</div>
+  <button id="rewardButton" disable="enable" onclick="var qr = document.getElementById('QR'); if (qr.style.display === 'none') {qr.style.display='block';} else {qr.style.display='none'}">
+    <span>打赏</span>
+  </button>
+  <div id="QR" style="display: none;">
+
+    
+      <div id="wechat" style="display: inline-block">
+        <img id="wechat_qr" src="/images/weixinpay.jpg" alt="JasonCui 微信支付"/>
+        <p>微信支付</p>
+      </div>
+    
+
+    
+      <div id="alipay" style="display: inline-block">
+        <img id="alipay_qr" src="/images/alipay.jpg" alt="JasonCui 支付宝"/>
+        <p>支付宝</p>
+      </div>
+    
+
+    
+
+  </div>
+</div>
+
+      </div>
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/幂等性/" rel="tag"># 幂等性</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/HTTPS原理.html" rel="next" title="HTTPS原理">
+                <i class="fa fa-chevron-left"></i> HTTPS原理
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/Java攻城师成神之路.html" rel="prev" title="Java攻城师成神之路">
+                Java攻城师成神之路 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+        <!-- JiaThis Button BEGIN -->
+<div class="jiathis_style">
+<span class="jiathis_txt">分享到：</span>
+<a class="jiathis_button_fav">收藏夹</a>
+<a class="jiathis_button_copy">复制网址</a>
+<a class="jiathis_button_email">邮件</a>
+<a class="jiathis_button_weixin">微信</a>
+<a class="jiathis_button_qzone">QQ空间</a>
+<a class="jiathis_button_tqq">腾讯微博</a>
+<a class="jiathis_button_douban">豆瓣</a>
+<a class="jiathis_button_share">一键分享</a>
+
+<a href="http://www.jiathis.com/share?uid=2140465" class="jiathis jiathis_txt jiathis_separator jtico jtico_jiathis" target="_blank">更多</a>
+<a class="jiathis_counter_style"></a>
+</div>
+<script type="text/javascript" >
+var jiathis_config={
+  data_track_clickback:true,
+  summary:"",
+  shortUrl:false,
+  hideMore:false
+}
+</script>
+<script type="text/javascript" src="http://v3.jiathis.com/code/jia.js?uid=" charset="utf-8"></script>
+<!-- JiaThis Button END -->
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+    <div class="comments" id="comments">
+      <div class="ds-thread" data-thread-key="分布式接口幂等性设计.html"
+           data-title="分布式接口幂等性设计" data-url="http://jasoncui.com/分布式接口幂等性设计.html">
+      </div>
+    </div>
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image"
+                src="/uploads/avatar.jpg"
+                alt="JasonCui" />
+            
+              <p class="site-author-name" itemprop="name">JasonCui</p>
+              <p class="site-description motion-element" itemprop="description">越努力，越幸运。</p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives">
+              
+                  <span class="site-state-item-count">17</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">7</span>
+                  <span class="site-state-item-name">分类</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">11</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+            <div class="feed-link motion-element">
+              <a href="/atom.xml" rel="alternate">
+                <i class="fa fa-rss"></i>
+                RSS
+              </a>
+            </div>
+          
+
+          
+            <div class="links-of-author motion-element">
+                
+                  <span class="links-of-author-item">
+                    <a rel="external nofollow" href="https://github.com/JasonCL2015" target="_blank" title="GitHub">
+                      
+                        <i class="fa fa-fw fa-globe"></i>GitHub</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a rel="external nofollow" href="https://twitter.com/JasonC996" target="_blank" title="Twitter">
+                      
+                        <i class="fa fa-fw fa-globe"></i>Twitter</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a rel="external nofollow" href="http://weibo.com/XXX" target="_blank" title="Weibo">
+                      
+                        <i class="fa fa-fw fa-globe"></i>Weibo</a>
+                  </span>
+                
+            </div>
+          
+
+          
+          
+
+          
+          
+            <div class="links-of-blogroll motion-element links-of-blogroll-inline">
+              <div class="links-of-blogroll-title">
+                <i class="fa  fa-fw fa-link"></i>
+                友情链接
+              </div>
+              <ul class="links-of-blogroll-list">
+                
+                  <li class="links-of-blogroll-item">
+                    <a rel="external nofollow" href="http://jasoncui.com" title="Jason.C" target="_blank">Jason.C</a>
+                  </li>
+                
+              </ul>
+            </div>
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#一、幂等性定义"><span class="nav-number">1.</span> <span class="nav-text">一、幂等性定义</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#二、接口中幂等性设计"><span class="nav-number">2.</span> <span class="nav-text">二、接口中幂等性设计</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#查询操作"><span class="nav-number">2.0.1.</span> <span class="nav-text">查询操作</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#删除操作"><span class="nav-number">2.0.2.</span> <span class="nav-text">删除操作</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#唯一索引，防止新增脏数据"><span class="nav-number">2.0.3.</span> <span class="nav-text">唯一索引，防止新增脏数据</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#token机制，防止页面重复提交"><span class="nav-number">2.0.4.</span> <span class="nav-text">token机制，防止页面重复提交</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#悲观锁"><span class="nav-number">2.0.5.</span> <span class="nav-text">悲观锁</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#乐观锁"><span class="nav-number">2.0.6.</span> <span class="nav-text">乐观锁</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#分布式锁"><span class="nav-number">2.0.7.</span> <span class="nav-text">分布式锁</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#select-insert"><span class="nav-number">2.0.8.</span> <span class="nav-text">select + insert</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#状态机幂等"><span class="nav-number">2.0.9.</span> <span class="nav-text">状态机幂等</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#对外提供接口的api如何保证幂等"><span class="nav-number">2.0.10.</span> <span class="nav-text">对外提供接口的api如何保证幂等</span></a></li></ol></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">JasonCui</span>
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a rel="external nofollow" class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" rel="external nofollow" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Mist</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+  
+    
+  
+
+  <script type="text/javascript">
+    var duoshuoQuery = {short_name:"jasoncui"};
+    (function() {
+      var ds = document.createElement('script');
+      ds.type = 'text/javascript';ds.async = true;
+      ds.id = 'duoshuo-script';
+      ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+      ds.charset = 'UTF-8';
+      (document.getElementsByTagName('head')[0]
+      || document.getElementsByTagName('body')[0]).appendChild(ds);
+    })();
+  </script>
+
+  
+    
+    
+    <script src="/lib/ua-parser-js/dist/ua-parser.min.js?v=0.7.9"></script>
+    <script src="/js/src/hook-duoshuo.js"></script>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  <script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+  <script src="//unpkg.com/valine/dist/Valine.min.js"></script>
+  
+  <script type="text/javascript">
+    var GUEST = ['nick','mail','link'];
+    var guest = 'nick,mail,link';
+    guest = guest.split(',').filter(item=>{
+      return GUEST.indexOf(item)>-1;
+    });
+    new Valine({
+        el: '#comments' ,
+        verify: false,
+        notify: false,
+        appId: 'OgY48lsk8uEVQmCf8Mjsbkqk-gzGzoHsz',
+        appKey: 'vPpTBs0KSTLEIIEy6NwltLRA',
+        placeholder: 'Just go go',
+        avatar:'mm',
+        guest_info:guest,
+        pageSize:'10' || 10,
+    });
+  </script>
+
+
+
+  
+
+
+
+
+
+  
+
+  
+  <script src="https://cdn1.lncld.net/static/js/av-core-mini-0.6.4.js"></script>
+  <script>AV.initialize("OgY48lsk8uEVQmCf8Mjsbkqk-gzGzoHsz", "vPpTBs0KSTLEIIEy6NwltLRA");</script>
+  <script>
+    function showTime(Counter) {
+      var query = new AV.Query(Counter);
+      var entries = [];
+      var $visitors = $(".leancloud_visitors");
+
+      $visitors.each(function () {
+        entries.push( $(this).attr("id").trim() );
+      });
+
+      query.containedIn('url', entries);
+      query.find()
+        .done(function (results) {
+          var COUNT_CONTAINER_REF = '.leancloud-visitors-count';
+
+          if (results.length === 0) {
+            $visitors.find(COUNT_CONTAINER_REF).text(0);
+            return;
+          }
+
+          for (var i = 0; i < results.length; i++) {
+            var item = results[i];
+            var url = item.get('url');
+            var time = item.get('time');
+            var element = document.getElementById(url);
+
+            $(element).find(COUNT_CONTAINER_REF).text(time);
+          }
+          for(var i = 0; i < entries.length; i++) {
+            var url = entries[i];
+            var element = document.getElementById(url);
+            var countSpan = $(element).find(COUNT_CONTAINER_REF);
+            if( countSpan.text() == '') {
+              countSpan.text(0);
+            }
+          }
+        })
+        .fail(function (object, error) {
+          console.log("Error: " + error.code + " " + error.message);
+        });
+    }
+
+    function addCount(Counter) {
+      var $visitors = $(".leancloud_visitors");
+      var url = $visitors.attr('id').trim();
+      var title = $visitors.attr('data-flag-title').trim();
+      var query = new AV.Query(Counter);
+
+      query.equalTo("url", url);
+      query.find({
+        success: function(results) {
+          if (results.length > 0) {
+            var counter = results[0];
+            counter.fetchWhenSave(true);
+            counter.increment("time");
+            counter.save(null, {
+              success: function(counter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(counter.get('time'));
+              },
+              error: function(counter, error) {
+                console.log('Failed to save Visitor num, with error message: ' + error.message);
+              }
+            });
+          } else {
+            var newcounter = new Counter();
+            /* Set ACL */
+            var acl = new AV.ACL();
+            acl.setPublicReadAccess(true);
+            acl.setPublicWriteAccess(true);
+            newcounter.setACL(acl);
+            /* End Set ACL */
+            newcounter.set("title", title);
+            newcounter.set("url", url);
+            newcounter.set("time", 1);
+            newcounter.save(null, {
+              success: function(newcounter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(newcounter.get('time'));
+              },
+              error: function(newcounter, error) {
+                console.log('Failed to create');
+              }
+            });
+          }
+        },
+        error: function(error) {
+          console.log('Error:' + error.code + " " + error.message);
+        }
+      });
+    }
+
+    $(function() {
+      var Counter = AV.Object.extend("Counter");
+      if ($('.leancloud_visitors').length == 1) {
+        addCount(Counter);
+      } else if ($('.post-title-link').length > 1) {
+        showTime(Counter);
+      }
+    });
+  </script>
+
+
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

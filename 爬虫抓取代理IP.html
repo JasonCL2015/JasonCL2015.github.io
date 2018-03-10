@@ -1,0 +1,1010 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="爬虫,代理IP" />
+
+
+
+
+
+  <link rel="alternate" href="/atom.xml" title="JasonCui's blog" type="application/atom+xml" />
+
+
+
+
+
+
+<meta name="description" content="由于某些网站对会对爬虫做限制，因此常常需要通过代理将爬虫的实际IP隐蔽起来，代理也有分类，如透明代理，高匿代理等。本文主要讲述如何获取代理IP，并且如何存储和使用。">
+<meta name="keywords" content="爬虫,代理IP">
+<meta property="og:type" content="article">
+<meta property="og:title" content="爬虫抓取代理IP">
+<meta property="og:url" content="http://jasoncui.com/爬虫抓取代理IP.html">
+<meta property="og:site_name" content="JasonCui&#39;s blog">
+<meta property="og:description" content="由于某些网站对会对爬虫做限制，因此常常需要通过代理将爬虫的实际IP隐蔽起来，代理也有分类，如透明代理，高匿代理等。本文主要讲述如何获取代理IP，并且如何存储和使用。">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2018-02-24T07:03:39.067Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="爬虫抓取代理IP">
+<meta name="twitter:description" content="由于某些网站对会对爬虫做限制，因此常常需要通过代理将爬虫的实际IP隐蔽起来，代理也有分类，如透明代理，高匿代理等。本文主要讲述如何获取代理IP，并且如何存储和使用。">
+
+<script>
+    (function(){
+        if(''){
+            if (prompt('请输入文章密码') !== ''){
+                alert('密码错误！');
+                history.back();
+            }
+        }
+    })();
+</script>
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    version: '5.1.4',
+    sidebar: {"position":"right","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://jasoncui.com/爬虫抓取代理IP.html"/>
+
+
+
+
+
+  <title>爬虫抓取代理IP | JasonCui's blog</title>
+  
+
+
+
+
+
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?8e687d8adb739b368d6d70e1d149c872";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-right page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">JasonCui's blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">Think And Code</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about" rel="section">
+            
+            关于
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://jasoncui.com/爬虫抓取代理IP.html">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="JasonCui">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/uploads/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="JasonCui's blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">爬虫抓取代理IP</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-01-17T21:03:04+08:00">
+                2018-01-17
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/爬虫/" itemprop="url" rel="index">
+                    <span itemprop="name">爬虫</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/爬虫抓取代理IP.html#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="爬虫抓取代理IP.html" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+             <span id="/爬虫抓取代理IP.html" class="leancloud_visitors" data-flag-title="爬虫抓取代理IP">
+               <span class="post-meta-divider">|</span>
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+               
+                 <span class="post-meta-item-text">阅读次数&#58;</span>
+               
+                 <span class="leancloud-visitors-count"></span>
+             </span>
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <blockquote class="blockquote-center"><br>由于某些网站对会对爬虫做限制，因此常常需要通过代理将爬虫的实际IP隐蔽起来，代理也有分类，如透明代理，高匿代理等。本文主要讲述如何获取代理IP，并且如何存储和使用。<br></blockquote>
+
+
+
+<a id="more"></a>
+<p> 某些网站会免费提供代理IP，如下面的几个<br>获取这些页面上的代理IP及端口也是通过爬虫抓取，下面以第一个网站<a href="http://www.xicidaili.com为例，解释如何获取并存储这些代理IP。一般的流程为：解析当前页面--&gt;存储当前页面的代理IP--&gt;跳转到下一页面，重复该流程即可。" target="_blank" rel="noopener">http://www.xicidaili.com为例，解释如何获取并存储这些代理IP。一般的流程为：解析当前页面--&gt;存储当前页面的代理IP--&gt;跳转到下一页面，重复该流程即可。</a></p>
+<p>##解析页面<br>首先要解析页面，由于网页中显示代理IP时是在表格中显示的，因此只需要通过找出网页源码中相关的表格元素即可。下面是通过python中的requests和bs4获取页面<a href="http://www.xicidaili.com/nt/上显示的IP及端口。" target="_blank" rel="noopener">http://www.xicidaili.com/nt/上显示的IP及端口。</a><br>  <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">  import requests</span><br><span class="line">from bs4 import BeautifulSoup</span><br><span class="line"></span><br><span class="line">user_agent = &apos;Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/51.0.2704.106 Safari/537.36&apos;</span><br><span class="line">referer = &apos;http://www.xicidaili.com/&apos;</span><br><span class="line">headers = &#123;&apos;user-agent&apos;: user_agent, &apos;referer&apos;: referer&#125;</span><br><span class="line">target = &apos;http://www.xicidaili.com/nt/&apos;</span><br><span class="line"></span><br><span class="line">//获取页面源码</span><br><span class="line">r = requests.get(target, headers = headers)</span><br><span class="line">//解析页面源码</span><br><span class="line">soup = BeautifulSoup(r.text, &apos;lxml&apos;)</span><br><span class="line">for tr in soup.find_all(&apos;tr&apos;)[1:]:</span><br><span class="line">tds = tr.find_all(&apos;td&apos;)</span><br><span class="line">proxy = tds[1].text+&apos;:&apos;+tds[2].text</span><br><span class="line">print proxy</span><br></pre></td></tr></table></figure></p>
+<p>输出如下：</p>
+  <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">  36.235.1.189:3128</span><br><span class="line">219.141.225.149:80</span><br><span class="line">125.44.132.44:9999</span><br><span class="line">123.249.8.100:3128</span><br><span class="line">183.54.30.186:9999</span><br><span class="line">110.211.45.228:9000</span><br><span class="line">...........</span><br></pre></td></tr></table></figure>
+<p>###代理IP的存储<br>上面代码获取的代理IP可以通过在代码一开始建立一个集合（set）来存储，这种情况适用于一次性使用这些代理IP，当程序发生异常或正常退出后，这些存储在内存中的代理IP也会丢失。但是爬虫中使用代理IP的情况又是非常多的，所以有必要把这些IP存储起来，从而可以让程序多次利用。<br>这里主要通过redis数据库存储这些代理IP，redis是一个NOSQL数据库，具体使用参照官方文档，这里不做详细解释。<br>下面是ConnectRedis.py文件，用于连接redis<br>  <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">import redis</span><br><span class="line"></span><br><span class="line">HOST = &apos;XXX.XXX.XXX.XXX&apos; # redis所在主机IP</span><br><span class="line">PORT = 6379 # redis服务监听的端口</span><br><span class="line">PASSWORD = &apos;XXXXXX&apos; # 连接redis的密码</span><br><span class="line">DB = 0 # IP存储的DB编号</span><br><span class="line"></span><br><span class="line">def get_connection():</span><br><span class="line">r = redis.Redis(host = HOST, port = PORT, password = PASSWORD, db= DB)</span><br><span class="line">return r</span><br></pre></td></tr></table></figure></p>
+<p>下面是在上面的代码基础上将IP存储到redis中，</p>
+  <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line">import requests</span><br><span class="line">from bs4 import BeautifulSoup</span><br><span class="line">from ConnectRedis import get_connection</span><br><span class="line">//获取redis连接</span><br><span class="line">try:</span><br><span class="line">conn = get_connection()</span><br><span class="line">except Exception:</span><br><span class="line">print &apos;Error while connecting to redis&apos;</span><br><span class="line">return</span><br><span class="line"></span><br><span class="line">user_agent = &apos;Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/51.0.2704.106 Safari/537.36&apos;</span><br><span class="line">referer = &apos;http://www.xicidaili.com/&apos;</span><br><span class="line">headers = &#123;&apos;user-agent&apos;: user_agent, &apos;referer&apos;: referer&#125;</span><br><span class="line">target = &apos;http://www.xicidaili.com/nt/&apos;</span><br><span class="line"></span><br><span class="line">//获取页面源码</span><br><span class="line">r = requests.get(target, headers = headers)</span><br><span class="line">//解析页面源码</span><br><span class="line">soup = BeautifulSoup(r.text, &apos;lxml&apos;)</span><br><span class="line">for tr in soup.find_all(&apos;tr&apos;)[1:]:</span><br><span class="line">tds = tr.find_all(&apos;td&apos;)</span><br><span class="line">proxy = tds[1].text+&apos;:&apos;+tds[2].text</span><br><span class="line">conn.sadd(&quot;ip_set&quot;, proxy)</span><br><span class="line">print &apos;%s added to ip set&apos;%proxy</span><br></pre></td></tr></table></figure>
+<p>上面的conn.sadd(“ip_set”, proxy)将代理proxy加入到redis的集合”ip_set”，这个集合需要预先在redis中创建，否则会出错。</p>
+<p>###页面跳转<br>上面的代码获取的只是一个页面上显示的代理，显然这个数量不够，一般通过当前页面中的下一页的超链接可以跳转到下一页，但是我们测试的由于每页的的url都有规律，都是<a href="http://www.xicidaili.com/nt/page_number,其中的page_number表示当前在哪一页，省略时为第一页。因此，通过一个for循环嵌套上面的代码即可获取多个页面的代理。但是更一般的方法是通过在当前页面获取下一页的超链接而跳转到下一页。" target="_blank" rel="noopener">http://www.xicidaili.com/nt/page_number,其中的page_number表示当前在哪一页，省略时为第一页。因此，通过一个for循环嵌套上面的代码即可获取多个页面的代理。但是更一般的方法是通过在当前页面获取下一页的超链接而跳转到下一页。</a></p>
+<p>###代理IP的使用<br>当我们需要通过代理访问某一网站时，首先需要从redis中随机选出一个代理ip，然后尝试通过代理ip是否能连到我们需要访问的目标网站，因为这些代理IP是公共使用的，所以往往也会被封的很快，假如通过代理无法访问目标网站，那么就要从数据库中删除这个代理IP。反之即可通过此代理访问目标网站<br>下面是实现上面所说流程的代码：<br>  <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line">import requests</span><br><span class="line">from ConnectRedis import get_connection</span><br><span class="line"></span><br><span class="line">//判断IP是否能访问目标网站</span><br><span class="line">def is_valid(url, ip):</span><br><span class="line">proxy = &#123;</span><br><span class="line">&apos;http&apos;: &apos;http://%s&apos; %ip</span><br><span class="line">&#125;</span><br><span class="line">user_agent = &apos;Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/51.0.2704.106 Safari/537.36&apos;</span><br><span class="line">headers = &#123;&apos;user-agent&apos;: user_agent&#125;</span><br><span class="line">try:</span><br><span class="line">r = requests.get(url, headers = headers, proxies = proxy, timeout = 6)</span><br><span class="line">return True</span><br><span class="line">except Exception:</span><br><span class="line">return False</span><br><span class="line"></span><br><span class="line">if __name__ == &apos;__main__&apos;:</span><br><span class="line">my_proxy, proxies, ip_set = None, None, &apos;amazon_ips&apos;</span><br><span class="line">conn = get_connection()</span><br><span class="line">target = &apos;https://www.amazon.com/&apos;</span><br><span class="line">while not is_valid(target, my_proxy):</span><br><span class="line">if my_proxy:</span><br><span class="line">conn.srem(ip_set, my_proxy) #删除无效的代理IP</span><br><span class="line">if proxies:</span><br><span class="line">my_proxy = proxies.pop()</span><br><span class="line">else:</span><br><span class="line">proxies = conn.srandmember(ip_set, 5) #从redis中随机抽5个代理ip</span><br><span class="line">my_proxy = proxies.pop()</span><br><span class="line">print &apos;valid proxy %s&apos; %my_proxy</span><br></pre></td></tr></table></figure></p>
+<p>requests.get(url, headers = headers, proxies = proxy, timeout = 6)是通过代理去访问目标网站，超时时间设为6s，也就是说在6秒内网站没有回应或返回错误信息就认为这个代理无效。<br>除此之外，在爬取免费提供代理的网站上的代理IP的时候，爬取的速度不要太快，其中的一个原因是爬取太快有可能会被封，另外一个原因是如果每个人都无间隙地从这种网站上爬取，那么网站的负担会比较大，甚至有可能垮掉，因此采用一个可持续爬取的策略非常有必要，我爬取的时候是没爬完一个页面后让程序sleep大概2分钟，这样下来不会被封而且爬取的代理的量也足够使用。实际中可以根据自己使用代理的频率来进行调整。</p>
+
+      
+    </div>
+    
+    
+    
+
+
+    
+      <div>
+        
+      </div>
+    
+
+    
+
+    
+      <div>
+        <div style="padding: 10px 0; margin: 20px auto; width: 90%; text-align: center;">
+  <div>如果觉得我的文章对您有用，请随意打赏。您的支持将鼓励我继续创作！</div>
+  <button id="rewardButton" disable="enable" onclick="var qr = document.getElementById('QR'); if (qr.style.display === 'none') {qr.style.display='block';} else {qr.style.display='none'}">
+    <span>打赏</span>
+  </button>
+  <div id="QR" style="display: none;">
+
+    
+      <div id="wechat" style="display: inline-block">
+        <img id="wechat_qr" src="/images/weixinpay.jpg" alt="JasonCui 微信支付"/>
+        <p>微信支付</p>
+      </div>
+    
+
+    
+      <div id="alipay" style="display: inline-block">
+        <img id="alipay_qr" src="/images/alipay.jpg" alt="JasonCui 支付宝"/>
+        <p>支付宝</p>
+      </div>
+    
+
+    
+
+  </div>
+</div>
+
+      </div>
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/爬虫/" rel="tag"># 爬虫</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/Docker常用指令.html" rel="next" title="Docker常用指令">
+                <i class="fa fa-chevron-left"></i> Docker常用指令
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+        <!-- JiaThis Button BEGIN -->
+<div class="jiathis_style">
+<span class="jiathis_txt">分享到：</span>
+<a class="jiathis_button_fav">收藏夹</a>
+<a class="jiathis_button_copy">复制网址</a>
+<a class="jiathis_button_email">邮件</a>
+<a class="jiathis_button_weixin">微信</a>
+<a class="jiathis_button_qzone">QQ空间</a>
+<a class="jiathis_button_tqq">腾讯微博</a>
+<a class="jiathis_button_douban">豆瓣</a>
+<a class="jiathis_button_share">一键分享</a>
+
+<a href="http://www.jiathis.com/share?uid=2140465" class="jiathis jiathis_txt jiathis_separator jtico jtico_jiathis" target="_blank">更多</a>
+<a class="jiathis_counter_style"></a>
+</div>
+<script type="text/javascript" >
+var jiathis_config={
+  data_track_clickback:true,
+  summary:"",
+  shortUrl:false,
+  hideMore:false
+}
+</script>
+<script type="text/javascript" src="http://v3.jiathis.com/code/jia.js?uid=" charset="utf-8"></script>
+<!-- JiaThis Button END -->
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+    <div class="comments" id="comments">
+      <div class="ds-thread" data-thread-key="爬虫抓取代理IP.html"
+           data-title="爬虫抓取代理IP" data-url="http://jasoncui.com/爬虫抓取代理IP.html">
+      </div>
+    </div>
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+
+      <section class="site-overview-wrap sidebar-panel sidebar-panel-active">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image"
+                src="/uploads/avatar.jpg"
+                alt="JasonCui" />
+            
+              <p class="site-author-name" itemprop="name">JasonCui</p>
+              <p class="site-description motion-element" itemprop="description">越努力，越幸运。</p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives">
+              
+                  <span class="site-state-item-count">17</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">7</span>
+                  <span class="site-state-item-name">分类</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">11</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+            <div class="feed-link motion-element">
+              <a href="/atom.xml" rel="alternate">
+                <i class="fa fa-rss"></i>
+                RSS
+              </a>
+            </div>
+          
+
+          
+            <div class="links-of-author motion-element">
+                
+                  <span class="links-of-author-item">
+                    <a rel="external nofollow" href="https://github.com/JasonCL2015" target="_blank" title="GitHub">
+                      
+                        <i class="fa fa-fw fa-globe"></i>GitHub</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a rel="external nofollow" href="https://twitter.com/JasonC996" target="_blank" title="Twitter">
+                      
+                        <i class="fa fa-fw fa-globe"></i>Twitter</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a rel="external nofollow" href="http://weibo.com/XXX" target="_blank" title="Weibo">
+                      
+                        <i class="fa fa-fw fa-globe"></i>Weibo</a>
+                  </span>
+                
+            </div>
+          
+
+          
+          
+
+          
+          
+            <div class="links-of-blogroll motion-element links-of-blogroll-inline">
+              <div class="links-of-blogroll-title">
+                <i class="fa  fa-fw fa-link"></i>
+                友情链接
+              </div>
+              <ul class="links-of-blogroll-list">
+                
+                  <li class="links-of-blogroll-item">
+                    <a rel="external nofollow" href="http://jasoncui.com" title="Jason.C" target="_blank">Jason.C</a>
+                  </li>
+                
+              </ul>
+            </div>
+          
+
+          
+
+        </div>
+      </section>
+
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">JasonCui</span>
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a rel="external nofollow" class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" rel="external nofollow" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Mist</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+  
+    
+  
+
+  <script type="text/javascript">
+    var duoshuoQuery = {short_name:"jasoncui"};
+    (function() {
+      var ds = document.createElement('script');
+      ds.type = 'text/javascript';ds.async = true;
+      ds.id = 'duoshuo-script';
+      ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+      ds.charset = 'UTF-8';
+      (document.getElementsByTagName('head')[0]
+      || document.getElementsByTagName('body')[0]).appendChild(ds);
+    })();
+  </script>
+
+  
+    
+    
+    <script src="/lib/ua-parser-js/dist/ua-parser.min.js?v=0.7.9"></script>
+    <script src="/js/src/hook-duoshuo.js"></script>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  <script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+  <script src="//unpkg.com/valine/dist/Valine.min.js"></script>
+  
+  <script type="text/javascript">
+    var GUEST = ['nick','mail','link'];
+    var guest = 'nick,mail,link';
+    guest = guest.split(',').filter(item=>{
+      return GUEST.indexOf(item)>-1;
+    });
+    new Valine({
+        el: '#comments' ,
+        verify: false,
+        notify: false,
+        appId: 'OgY48lsk8uEVQmCf8Mjsbkqk-gzGzoHsz',
+        appKey: 'vPpTBs0KSTLEIIEy6NwltLRA',
+        placeholder: 'Just go go',
+        avatar:'mm',
+        guest_info:guest,
+        pageSize:'10' || 10,
+    });
+  </script>
+
+
+
+  
+
+
+
+
+
+  
+
+  
+  <script src="https://cdn1.lncld.net/static/js/av-core-mini-0.6.4.js"></script>
+  <script>AV.initialize("OgY48lsk8uEVQmCf8Mjsbkqk-gzGzoHsz", "vPpTBs0KSTLEIIEy6NwltLRA");</script>
+  <script>
+    function showTime(Counter) {
+      var query = new AV.Query(Counter);
+      var entries = [];
+      var $visitors = $(".leancloud_visitors");
+
+      $visitors.each(function () {
+        entries.push( $(this).attr("id").trim() );
+      });
+
+      query.containedIn('url', entries);
+      query.find()
+        .done(function (results) {
+          var COUNT_CONTAINER_REF = '.leancloud-visitors-count';
+
+          if (results.length === 0) {
+            $visitors.find(COUNT_CONTAINER_REF).text(0);
+            return;
+          }
+
+          for (var i = 0; i < results.length; i++) {
+            var item = results[i];
+            var url = item.get('url');
+            var time = item.get('time');
+            var element = document.getElementById(url);
+
+            $(element).find(COUNT_CONTAINER_REF).text(time);
+          }
+          for(var i = 0; i < entries.length; i++) {
+            var url = entries[i];
+            var element = document.getElementById(url);
+            var countSpan = $(element).find(COUNT_CONTAINER_REF);
+            if( countSpan.text() == '') {
+              countSpan.text(0);
+            }
+          }
+        })
+        .fail(function (object, error) {
+          console.log("Error: " + error.code + " " + error.message);
+        });
+    }
+
+    function addCount(Counter) {
+      var $visitors = $(".leancloud_visitors");
+      var url = $visitors.attr('id').trim();
+      var title = $visitors.attr('data-flag-title').trim();
+      var query = new AV.Query(Counter);
+
+      query.equalTo("url", url);
+      query.find({
+        success: function(results) {
+          if (results.length > 0) {
+            var counter = results[0];
+            counter.fetchWhenSave(true);
+            counter.increment("time");
+            counter.save(null, {
+              success: function(counter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(counter.get('time'));
+              },
+              error: function(counter, error) {
+                console.log('Failed to save Visitor num, with error message: ' + error.message);
+              }
+            });
+          } else {
+            var newcounter = new Counter();
+            /* Set ACL */
+            var acl = new AV.ACL();
+            acl.setPublicReadAccess(true);
+            acl.setPublicWriteAccess(true);
+            newcounter.setACL(acl);
+            /* End Set ACL */
+            newcounter.set("title", title);
+            newcounter.set("url", url);
+            newcounter.set("time", 1);
+            newcounter.save(null, {
+              success: function(newcounter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(newcounter.get('time'));
+              },
+              error: function(newcounter, error) {
+                console.log('Failed to create');
+              }
+            });
+          }
+        },
+        error: function(error) {
+          console.log('Error:' + error.code + " " + error.message);
+        }
+      });
+    }
+
+    $(function() {
+      var Counter = AV.Object.extend("Counter");
+      if ($('.leancloud_visitors').length == 1) {
+        addCount(Counter);
+      } else if ($('.post-title-link').length > 1) {
+        showTime(Counter);
+      }
+    });
+  </script>
+
+
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

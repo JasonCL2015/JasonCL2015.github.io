@@ -1,0 +1,1110 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="经纬度转换,GeoTools,EPSG:4326" />
+
+
+
+
+
+  <link rel="alternate" href="/atom.xml" title="JasonCui's blog" type="application/atom+xml" />
+
+
+
+
+
+
+<meta name="description" content="利用Geotools工具转换经纬度坐标为需要的投影坐标。">
+<meta name="keywords" content="经纬度转换,GeoTools,EPSG:4326">
+<meta property="og:type" content="article">
+<meta property="og:title" content="经纬度坐标转换">
+<meta property="og:url" content="http://jasoncui.com/2016/11/24/经纬度坐标转换/index.html">
+<meta property="og:site_name" content="JasonCui&#39;s blog">
+<meta property="og:description" content="利用Geotools工具转换经纬度坐标为需要的投影坐标。">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2018-03-10T07:58:18.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="经纬度坐标转换">
+<meta name="twitter:description" content="利用Geotools工具转换经纬度坐标为需要的投影坐标。">
+
+<script>
+    (function(){
+        if(''){
+            if (prompt('请输入文章密码') !== ''){
+                alert('密码错误！');
+                history.back();
+            }
+        }
+    })();
+</script>
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    version: '5.1.4',
+    sidebar: {"position":"right","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://jasoncui.com/2016/11/24/经纬度坐标转换/"/>
+
+
+
+
+
+  <title>经纬度坐标转换 | JasonCui's blog</title>
+  
+
+
+
+
+
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?8e687d8adb739b368d6d70e1d149c872";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-right page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">JasonCui's blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">Think And Code</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about" rel="section">
+            
+            关于
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://jasoncui.com/2016/11/24/经纬度坐标转换/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="JasonCui">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/uploads/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="JasonCui's blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">经纬度坐标转换</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2016-11-24T21:02:44+08:00">
+                2016-11-24
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/随记/" itemprop="url" rel="index">
+                    <span itemprop="name">随记</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2016/11/24/经纬度坐标转换/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/11/24/经纬度坐标转换/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+             <span id="/2016/11/24/经纬度坐标转换/" class="leancloud_visitors" data-flag-title="经纬度坐标转换">
+               <span class="post-meta-divider">|</span>
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+               
+                 <span class="post-meta-item-text">阅读次数&#58;</span>
+               
+                 <span class="leancloud-visitors-count"></span>
+             </span>
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <blockquote class="blockquote-center"><br>利用Geotools工具转换经纬度坐标为需要的投影坐标。<br></blockquote>
+
+
+
+<a id="more"></a>
+<h2 id="名词扫盲"><a href="#名词扫盲" class="headerlink" title="名词扫盲"></a>名词扫盲</h2><h3 id="EPSG"><a href="#EPSG" class="headerlink" title="EPSG"></a>EPSG</h3><p>EPSG：European Petroleum Survey Group (EPSG)， <a href="http://www.epsg.org/，它成立于1986年，并在2005年重组为OGP" target="_blank" rel="noopener">http://www.epsg.org/，它成立于1986年，并在2005年重组为OGP</a>(Internation Association of Oil &amp; Gas Producers)，它负责维护并发布坐标参照系统的数据集参数，以及坐标转换描述，该数据集被广泛接受并使用，通过一个Web发布平台进行分发，同时提供了微软Acess数据库的存储文件，通过SQL 脚本文件，mySQL, Oracle 和PostgreSQL等数据库也可使用。<br>目前已有的椭球体，投影坐标系等不同组合都对应着不同的ID号，这个号在EPSG中被称为EPSG code，它代表特定的椭球体、单位、地理坐标系或投影坐标系等信息。</p>
+<h3 id="SRID"><a href="#SRID" class="headerlink" title="SRID"></a>SRID</h3><p>SRID：OGC标准中的参数SRID，也是指的空间参考系统的ID，与EPSG一致；WMS 1.1.1以前用SRS参数（空间参考系）表示坐标系统，WMS1.3开始用CRS参数（坐标参考系统）来表示。<br>    A Spatial Reference System Identifier(SRID) is a unique value used to unambiguously identify projected, unprojected, and local spatial coordinate system definitions. These coordinate systems form the heart of all GIS applications.<br>    Virtually all major spatial vendors have created their own SRID implementation or refer to those of an authority, such as the European Petroleum Survey Group (EPSG). (NOTE: As of 2005 the EPSG SRID values are now maintained by the International Association of Oil &amp; Gas Producers (OGP) Surveying &amp; Positioning Committee).<br>以OGC请求为例：<br><a href="http://localhost/IS/WebServices/wms.ashx?map=World&amp;SERVICE=WMS&amp;REQUEST=GetMap&amp;LAYERS=&amp;STYLES=&amp;SRS=EPSG:4326&amp;BBOX=-3,44,10,53&amp;WIDTH=600&amp;HEIGHT=300&amp;FORMAT=image/gif&amp;BGCOLOR=&amp;VERSION=1.1.1" target="_blank" rel="noopener">http://localhost/IS/WebServices/wms.ashx?map=World&amp;SERVICE=WMS&amp;REQUEST=GetMap&amp;LAYERS=&amp;STYLES=&amp;SRS=EPSG:4326&amp;BBOX=-3,44,10,53&amp;WIDTH=600&amp;HEIGHT=300&amp;FORMAT=image/gif&amp;BGCOLOR=&amp;VERSION=1.1.1</a><br>SRS=EPSG:4326代表地理坐标系WGS1984</p>
+<h3 id="WKT"><a href="#WKT" class="headerlink" title="WKT"></a>WKT</h3><p>空间参考系统的文字描述；无论是参考椭球、基准面、投影方式、坐标单位等，都有相应 的EPSG值表示。</p>
+<p>举例：<br>Beijing 1954地理坐标系，高斯–克吕格投影（横轴等角切圆柱投影）<br>下面为投影相关信息：<br>投影方式 Gauss_Kruger<br>中央经线 75.000000<br>原点纬线 0.000000<br>标准纬线(1) 0.000000<br>标准纬线(2) 0.000000<br>水平偏移量 13500000.000000<br>垂直偏移量 0.000000<br>比例因子 1.000000<br>方位角   0.000000<br>第一点经线 0.000000<br>第二点经线 0.000000<br>地理坐标系 GCS_Beijing_1954<br>大地参照系 D_Beijing_1954<br>参考椭球体 Krasovsky_1940<br>椭球长半轴 6378245.000000<br>椭球扁率 0.0033523299<br>本初子午线 0.000000</p>
+<p>WKT形式表示该投影坐标系：<br>PROJCS[“Gauss_Kruger”,<br>GEOGCS[“GCS_Beijing_1954”,<br>   DATUM[“D_Beijing_1954”,<br>    SPHEROID[“Krasovsky_1940”,6378245.000000,298.299997264589]]<br>   ]<br>PEIMEM[“Greenwich”,0]<br>UNIT[“degree”,0.0174532925199433]//地理单位：0.0174532925199433代表与米之间的转换<br>],<br>PROJECTION[“Gauss_Kruger”],<br>PARAMETER[“False_Easting”,13500000.000000],<br>PARAMETER[“False_Northing”,0],<br>PARAMETER[“Central_Meridian”,75.000000],<br>PARAMETER[“Scale_Factor”,1.0],<br>PARAMETER[“Latitude_Of_Origin”,0.0],<br>UNIT[“Meter”,1.0]] ;</p>
+<h2 id="GeoTools"><a href="#GeoTools" class="headerlink" title="GeoTools"></a>GeoTools</h2><p>GeoTools is an open source Java library that provides tools for geospatial data.</p>
+<p>本文主要介绍利用GeoTools进行坐标系转换，将经纬度坐标转为投影坐标。<br>maven引入依赖包</p>
+<pre><code>&lt;dependency&gt;
+        &lt;groupId&gt;org.geotools&lt;/groupId&gt;
+        &lt;artifactId&gt;gt-referencing&lt;/artifactId&gt;
+        &lt;version&gt;16.0&lt;/version&gt;
+    &lt;/dependency&gt;
+    &lt;dependency&gt;
+        &lt;groupId&gt;org.geotools&lt;/groupId&gt;
+        &lt;artifactId&gt;gt-epsg-wkt&lt;/artifactId&gt;
+        &lt;version&gt;16.0&lt;/version&gt;
+    &lt;/dependency&gt;
+    &lt;dependency&gt;
+        &lt;groupId&gt;org.geotools&lt;/groupId&gt;
+        &lt;artifactId&gt;gt-api&lt;/artifactId&gt;
+        &lt;version&gt;16.0&lt;/version&gt;
+    &lt;/dependency&gt;
+
+    &lt;dependency&gt;
+        &lt;groupId&gt;org.geotools&lt;/groupId&gt;
+        &lt;artifactId&gt;gt-opengis&lt;/artifactId&gt;
+        &lt;version&gt;16.0&lt;/version&gt;
+    &lt;/dependency&gt;
+
+    &lt;dependency&gt;
+        &lt;groupId&gt;org.geotools&lt;/groupId&gt;
+        &lt;artifactId&gt;gt-metadata&lt;/artifactId&gt;
+        &lt;version&gt;16.0&lt;/version&gt;
+    &lt;/dependency&gt;
+
+    &lt;dependency&gt;
+        &lt;groupId&gt;com.vividsolutions&lt;/groupId&gt;
+        &lt;artifactId&gt;jts&lt;/artifactId&gt;
+        &lt;version&gt;1.13&lt;/version&gt;
+    &lt;/dependency&gt;
+    &lt;dependency&gt;
+        &lt;groupId&gt;com.googlecode.efficient-java-matrix-library&lt;/groupId&gt;
+        &lt;artifactId&gt;ejml&lt;/artifactId&gt;
+        &lt;version&gt;0.25&lt;/version&gt;
+    &lt;/dependency&gt;
+
+    &lt;dependency&gt;
+        &lt;groupId&gt;eu.agrosense.apps&lt;/groupId&gt;
+        &lt;artifactId&gt;launcher&lt;/artifactId&gt;
+        &lt;version&gt;14.02-beta&lt;/version&gt;
+    &lt;/dependency&gt;
+</code></pre><p>核心代码</p>
+<pre><code>public static double[] convert(double lon, double lat)
+        throws FactoryException, MismatchedDimensionException, TransformException {
+    // 传入原始的经纬度坐标
+    Coordinate sourceCoord = new Coordinate(lon, lat);
+    GeometryFactory geoFactory = new GeometryFactory();
+    Point sourcePoint = geoFactory.createPoint(sourceCoord);
+
+    // 这里是以OGC WKT形式定义的是World Mercator投影，网页地图一般使用该投影
+    final String strWKTMercator = &quot;PROJCS[\&quot;World_Mercator\&quot;,&quot;
+            + &quot;GEOGCS[\&quot;GCS_WGS_1984\&quot;,&quot;
+            + &quot;DATUM[\&quot;WGS_1984\&quot;,&quot;
+            + &quot;SPHEROID[\&quot;WGS_1984\&quot;,6378137,298.257223563]],&quot;
+            + &quot;PRIMEM[\&quot;Greenwich\&quot;,0],&quot;
+            + &quot;UNIT[\&quot;Degree\&quot;,0.017453292519943295]],&quot;
+            + &quot;PROJECTION[\&quot;Mercator_1SP\&quot;],&quot;
+            + &quot;PARAMETER[\&quot;False_Easting\&quot;,0],&quot;
+            + &quot;PARAMETER[\&quot;False_Northing\&quot;,0],&quot;
+            + &quot;PARAMETER[\&quot;Central_Meridian\&quot;,0],&quot;
+            + &quot;PARAMETER[\&quot;latitude_of_origin\&quot;,0],&quot;
+            + &quot;UNIT[\&quot;Meter\&quot;,1]]&quot;;
+    CoordinateReferenceSystem mercatroCRS = CRS.parseWKT(strWKTMercator);
+    // 做投影转换，将WCG84坐标转换成世界墨卡托投影转
+    MathTransform transform = CRS.findMathTransform(DefaultGeographicCRS.WGS84, mercatroCRS);
+    Point targetPoint = (Point) JTS.transform(sourcePoint, transform);
+
+    // 返回转换以后的X和Y坐标
+    double[] targetCoord = {targetPoint.getX(), targetPoint.getY()};
+    return targetCoord;
+}
+</code></pre><p>上述方法中引用的是OGC WKT形式定义的world mercator投影，更多WKT可查看<a href="http://spatialreference.org/" target="_blank" rel="noopener">http://spatialreference.org/</a></p>
+
+      
+    </div>
+    
+    
+    
+
+
+    
+      <div>
+        
+      </div>
+    
+
+    
+
+    
+      <div>
+        <div style="padding: 10px 0; margin: 20px auto; width: 90%; text-align: center;">
+  <div>如果觉得我的文章对您有用，请随意打赏。您的支持将鼓励我继续创作！</div>
+  <button id="rewardButton" disable="enable" onclick="var qr = document.getElementById('QR'); if (qr.style.display === 'none') {qr.style.display='block';} else {qr.style.display='none'}">
+    <span>打赏</span>
+  </button>
+  <div id="QR" style="display: none;">
+
+    
+      <div id="wechat" style="display: inline-block">
+        <img id="wechat_qr" src="/images/weixinpay.jpg" alt="JasonCui 微信支付"/>
+        <p>微信支付</p>
+      </div>
+    
+
+    
+      <div id="alipay" style="display: inline-block">
+        <img id="alipay_qr" src="/images/alipay.jpg" alt="JasonCui 支付宝"/>
+        <p>支付宝</p>
+      </div>
+    
+
+    
+
+  </div>
+</div>
+
+      </div>
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/坐标转换/" rel="tag"># 坐标转换</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2016/10/14/我的读书/" rel="next" title="吭书吧">
+                <i class="fa fa-chevron-left"></i> 吭书吧
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2016/11/24/Docker Logging via EFK/" rel="prev" title="Docker Logging via EFK (Elasticsearch + Fluentd + Kibana) Stack with Docker Compose">
+                Docker Logging via EFK (Elasticsearch + Fluentd + Kibana) Stack with Docker Compose <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+        <!-- JiaThis Button BEGIN -->
+<div class="jiathis_style">
+<span class="jiathis_txt">分享到：</span>
+<a class="jiathis_button_fav">收藏夹</a>
+<a class="jiathis_button_copy">复制网址</a>
+<a class="jiathis_button_email">邮件</a>
+<a class="jiathis_button_weixin">微信</a>
+<a class="jiathis_button_qzone">QQ空间</a>
+<a class="jiathis_button_tqq">腾讯微博</a>
+<a class="jiathis_button_douban">豆瓣</a>
+<a class="jiathis_button_share">一键分享</a>
+
+<a href="http://www.jiathis.com/share?uid=2140465" class="jiathis jiathis_txt jiathis_separator jtico jtico_jiathis" target="_blank">更多</a>
+<a class="jiathis_counter_style"></a>
+</div>
+<script type="text/javascript" >
+var jiathis_config={
+  data_track_clickback:true,
+  summary:"",
+  shortUrl:false,
+  hideMore:false
+}
+</script>
+<script type="text/javascript" src="http://v3.jiathis.com/code/jia.js?uid=" charset="utf-8"></script>
+<!-- JiaThis Button END -->
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+    <div class="comments" id="comments">
+      <div class="ds-thread" data-thread-key="2016/11/24/经纬度坐标转换/"
+           data-title="经纬度坐标转换" data-url="http://jasoncui.com/2016/11/24/经纬度坐标转换/">
+      </div>
+    </div>
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image"
+                src="/uploads/avatar.jpg"
+                alt="JasonCui" />
+            
+              <p class="site-author-name" itemprop="name">JasonCui</p>
+              <p class="site-description motion-element" itemprop="description">Winter is comming.</p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives">
+              
+                  <span class="site-state-item-count">19</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">7</span>
+                  <span class="site-state-item-name">分类</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">12</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+            <div class="feed-link motion-element">
+              <a href="/atom.xml" rel="alternate">
+                <i class="fa fa-rss"></i>
+                RSS
+              </a>
+            </div>
+          
+
+          
+            <div class="links-of-author motion-element">
+                
+                  <span class="links-of-author-item">
+                    <a rel="external nofollow" href="https://github.com/JasonCL2015" target="_blank" title="GitHub">
+                      
+                        <i class="fa fa-fw fa-globe"></i>GitHub</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a rel="external nofollow" href="https://twitter.com/JasonC996" target="_blank" title="Twitter">
+                      
+                        <i class="fa fa-fw fa-globe"></i>Twitter</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a rel="external nofollow" href="http://weibo.com/XXX" target="_blank" title="Weibo">
+                      
+                        <i class="fa fa-fw fa-globe"></i>Weibo</a>
+                  </span>
+                
+            </div>
+          
+
+          
+          
+
+          
+          
+            <div class="links-of-blogroll motion-element links-of-blogroll-inline">
+              <div class="links-of-blogroll-title">
+                <i class="fa  fa-fw fa-link"></i>
+                友情链接
+              </div>
+              <ul class="links-of-blogroll-list">
+                
+                  <li class="links-of-blogroll-item">
+                    <a rel="external nofollow" href="http://jasoncui.com" title="Jason.C" target="_blank">Jason.C</a>
+                  </li>
+                
+              </ul>
+            </div>
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#名词扫盲"><span class="nav-number">1.</span> <span class="nav-text">名词扫盲</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#EPSG"><span class="nav-number">1.1.</span> <span class="nav-text">EPSG</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#SRID"><span class="nav-number">1.2.</span> <span class="nav-text">SRID</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#WKT"><span class="nav-number">1.3.</span> <span class="nav-text">WKT</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#GeoTools"><span class="nav-number">2.</span> <span class="nav-text">GeoTools</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">JasonCui</span>
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a rel="external nofollow" class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" rel="external nofollow" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Mist</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+  
+    
+  
+
+  <script type="text/javascript">
+    var duoshuoQuery = {short_name:"jasoncui"};
+    (function() {
+      var ds = document.createElement('script');
+      ds.type = 'text/javascript';ds.async = true;
+      ds.id = 'duoshuo-script';
+      ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+      ds.charset = 'UTF-8';
+      (document.getElementsByTagName('head')[0]
+      || document.getElementsByTagName('body')[0]).appendChild(ds);
+    })();
+  </script>
+
+  
+    
+    
+    <script src="/lib/ua-parser-js/dist/ua-parser.min.js?v=0.7.9"></script>
+    <script src="/js/src/hook-duoshuo.js"></script>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  <script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+  <script src="//unpkg.com/valine/dist/Valine.min.js"></script>
+  
+  <script type="text/javascript">
+    var GUEST = ['nick','mail','link'];
+    var guest = 'nick,mail,link';
+    guest = guest.split(',').filter(item=>{
+      return GUEST.indexOf(item)>-1;
+    });
+    new Valine({
+        el: '#comments' ,
+        verify: false,
+        notify: false,
+        appId: 'OgY48lsk8uEVQmCf8Mjsbkqk-gzGzoHsz',
+        appKey: 'vPpTBs0KSTLEIIEy6NwltLRA',
+        placeholder: 'Just go go',
+        avatar:'mm',
+        guest_info:guest,
+        pageSize:'10' || 10,
+    });
+  </script>
+
+
+
+  
+
+
+
+
+
+  
+
+  
+  <script src="https://cdn1.lncld.net/static/js/av-core-mini-0.6.4.js"></script>
+  <script>AV.initialize("OgY48lsk8uEVQmCf8Mjsbkqk-gzGzoHsz", "vPpTBs0KSTLEIIEy6NwltLRA");</script>
+  <script>
+    function showTime(Counter) {
+      var query = new AV.Query(Counter);
+      var entries = [];
+      var $visitors = $(".leancloud_visitors");
+
+      $visitors.each(function () {
+        entries.push( $(this).attr("id").trim() );
+      });
+
+      query.containedIn('url', entries);
+      query.find()
+        .done(function (results) {
+          var COUNT_CONTAINER_REF = '.leancloud-visitors-count';
+
+          if (results.length === 0) {
+            $visitors.find(COUNT_CONTAINER_REF).text(0);
+            return;
+          }
+
+          for (var i = 0; i < results.length; i++) {
+            var item = results[i];
+            var url = item.get('url');
+            var time = item.get('time');
+            var element = document.getElementById(url);
+
+            $(element).find(COUNT_CONTAINER_REF).text(time);
+          }
+          for(var i = 0; i < entries.length; i++) {
+            var url = entries[i];
+            var element = document.getElementById(url);
+            var countSpan = $(element).find(COUNT_CONTAINER_REF);
+            if( countSpan.text() == '') {
+              countSpan.text(0);
+            }
+          }
+        })
+        .fail(function (object, error) {
+          console.log("Error: " + error.code + " " + error.message);
+        });
+    }
+
+    function addCount(Counter) {
+      var $visitors = $(".leancloud_visitors");
+      var url = $visitors.attr('id').trim();
+      var title = $visitors.attr('data-flag-title').trim();
+      var query = new AV.Query(Counter);
+
+      query.equalTo("url", url);
+      query.find({
+        success: function(results) {
+          if (results.length > 0) {
+            var counter = results[0];
+            counter.fetchWhenSave(true);
+            counter.increment("time");
+            counter.save(null, {
+              success: function(counter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(counter.get('time'));
+              },
+              error: function(counter, error) {
+                console.log('Failed to save Visitor num, with error message: ' + error.message);
+              }
+            });
+          } else {
+            var newcounter = new Counter();
+            /* Set ACL */
+            var acl = new AV.ACL();
+            acl.setPublicReadAccess(true);
+            acl.setPublicWriteAccess(true);
+            newcounter.setACL(acl);
+            /* End Set ACL */
+            newcounter.set("title", title);
+            newcounter.set("url", url);
+            newcounter.set("time", 1);
+            newcounter.save(null, {
+              success: function(newcounter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(newcounter.get('time'));
+              },
+              error: function(newcounter, error) {
+                console.log('Failed to create');
+              }
+            });
+          }
+        },
+        error: function(error) {
+          console.log('Error:' + error.code + " " + error.message);
+        }
+      });
+    }
+
+    $(function() {
+      var Counter = AV.Object.extend("Counter");
+      if ($('.leancloud_visitors').length == 1) {
+        addCount(Counter);
+      } else if ($('.post-title-link').length > 1) {
+        showTime(Counter);
+      }
+    });
+  </script>
+
+
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

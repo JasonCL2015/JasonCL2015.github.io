@@ -4,6 +4,41 @@
 
     
   <url>
+    <loc>http://jasoncui.com/2018/07/14/%E5%B1%A5%E5%8E%862/</loc>
+    <lastmod>2018-07-14T04:44:35.842Z</lastmod>
+    <data>
+        <display>
+        <title>履历2</title>
+        <pubTime>2018-07-14T04:38:30.000Z</pubTime>
+        
+        <tag>读书</tag>
+         
+         
+           
+             
+              <breadCrumb title="读书" url="http://jasoncui.com/categories/%E8%AF%BB%E4%B9%A6/"/>
+          
+        </display>
+    </data>
+    </url>
+
+    
+  <url>
+    <loc>http://jasoncui.com/2018/07/14/%E5%B1%A5%E5%8E%86/</loc>
+    <lastmod>2018-07-14T04:34:18.566Z</lastmod>
+    <data>
+        <display>
+        <title></title>
+        <pubTime>2018-07-14T03:52:16.603Z</pubTime>
+        
+         
+           
+        </display>
+    </data>
+    </url>
+
+    
+  <url>
     <loc>http://jasoncui.com/2018/02/17/%E5%AE%9A%E6%97%B6%E4%BB%BB%E5%8A%A1%E8%B0%83%E5%BA%A6%E8%AE%BE%E8%AE%A1%E4%B8%8E%E5%AE%9E%E7%8E%B0/</loc>
     <lastmod>2018-06-14T10:03:34.924Z</lastmod>
     <data>
@@ -285,46 +320,6 @@
 
     
   <url>
-    <loc>http://jasoncui.com/2016/12/01/HTTPS%E5%8E%9F%E7%90%86/</loc>
-    <lastmod>2018-03-10T07:58:18.000Z</lastmod>
-    <data>
-        <display>
-        <title>HTTPS原理</title>
-        <pubTime>2016-12-01T01:45:07.000Z</pubTime>
-        
-        <tag>Http</tag>
-         
-         
-           
-             
-              <breadCrumb title="基础" url="http://jasoncui.com/categories/%E5%9F%BA%E7%A1%80/"/>
-          
-        </display>
-    </data>
-    </url>
-
-    
-  <url>
-    <loc>http://jasoncui.com/2016/09/18/Ubuntu16%E5%AE%89%E8%A3%85rtx/</loc>
-    <lastmod>2018-03-10T07:58:18.000Z</lastmod>
-    <data>
-        <display>
-        <title>Ubuntu16安装rtx</title>
-        <pubTime>2016-09-18T13:03:04.000Z</pubTime>
-        
-        <tag>Linux</tag>
-         
-         
-           
-             
-              <breadCrumb title="Linux" url="http://jasoncui.com/categories/Linux/"/>
-          
-        </display>
-    </data>
-    </url>
-
-    
-  <url>
     <loc>http://jasoncui.com/2016/11/24/%E7%BB%8F%E7%BA%AC%E5%BA%A6%E5%9D%90%E6%A0%87%E8%BD%AC%E6%8D%A2/</loc>
     <lastmod>2018-03-10T07:58:18.000Z</lastmod>
     <data>
@@ -358,6 +353,46 @@
            
              
               <breadCrumb title="Docker" url="http://jasoncui.com/categories/Docker/"/>
+          
+        </display>
+    </data>
+    </url>
+
+    
+  <url>
+    <loc>http://jasoncui.com/2016/09/18/Ubuntu16%E5%AE%89%E8%A3%85rtx/</loc>
+    <lastmod>2018-03-10T07:58:18.000Z</lastmod>
+    <data>
+        <display>
+        <title>Ubuntu16安装rtx</title>
+        <pubTime>2016-09-18T13:03:04.000Z</pubTime>
+        
+        <tag>Linux</tag>
+         
+         
+           
+             
+              <breadCrumb title="Linux" url="http://jasoncui.com/categories/Linux/"/>
+          
+        </display>
+    </data>
+    </url>
+
+    
+  <url>
+    <loc>http://jasoncui.com/2016/12/01/HTTPS%E5%8E%9F%E7%90%86/</loc>
+    <lastmod>2018-03-10T07:58:18.000Z</lastmod>
+    <data>
+        <display>
+        <title>HTTPS原理</title>
+        <pubTime>2016-12-01T01:45:07.000Z</pubTime>
+        
+        <tag>Http</tag>
+         
+         
+           
+             
+              <breadCrumb title="基础" url="http://jasoncui.com/categories/%E5%9F%BA%E7%A1%80/"/>
           
         </display>
     </data>

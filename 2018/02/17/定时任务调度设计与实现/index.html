@@ -81,13 +81,13 @@
 
 
 
-<meta name="description" content="description:很多时候业务系统中有定时任务或者定时超时处理的需求，当任务量很大时，需要维护大量的timer，或者进行低效的扫描，本文针对此类业务场景与大家分享一种高效实时的解决方式。">
+<meta name="description" content="很多时候业务系统中有定时任务或者定时超时处理的需求，当任务量很大时，需要维护大量的timer，或者进行低效的扫描，本文针对此类业务场景与大家分享一种高效实时的解决方式。">
 <meta name="keywords" content="定时任务">
 <meta property="og:type" content="article">
 <meta property="og:title" content="定时任务调度设计与实现">
 <meta property="og:url" content="http://jasoncui.com/2018/02/17/定时任务调度设计与实现/index.html">
 <meta property="og:site_name" content="JasonCui&#39;s blog">
-<meta property="og:description" content="description:很多时候业务系统中有定时任务或者定时超时处理的需求，当任务量很大时，需要维护大量的timer，或者进行低效的扫描，本文针对此类业务场景与大家分享一种高效实时的解决方式。">
+<meta property="og:description" content="很多时候业务系统中有定时任务或者定时超时处理的需求，当任务量很大时，需要维护大量的timer，或者进行低效的扫描，本文针对此类业务场景与大家分享一种高效实时的解决方式。">
 <meta property="og:locale" content="zh-Hans">
 <meta property="og:image" content="http://ojb6w1er1.bkt.clouddn.com/2018-06-14-062000.jpg">
 <meta property="og:image" content="http://ojb6w1er1.bkt.clouddn.com/2018-06-14-073316.png">
@@ -95,10 +95,10 @@
 <meta property="og:image" content="http://ojb6w1er1.bkt.clouddn.com/2018-06-14-092642.png">
 <meta property="og:image" content="http://ojb6w1er1.bkt.clouddn.com/2018-06-14-093959.png">
 <meta property="og:image" content="http://ojb6w1er1.bkt.clouddn.com/2018-06-14-093934.png">
-<meta property="og:updated_time" content="2018-06-14T10:03:34.924Z">
+<meta property="og:updated_time" content="2018-12-25T06:23:54.020Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="定时任务调度设计与实现">
-<meta name="twitter:description" content="description:很多时候业务系统中有定时任务或者定时超时处理的需求，当任务量很大时，需要维护大量的timer，或者进行低效的扫描，本文针对此类业务场景与大家分享一种高效实时的解决方式。">
+<meta name="twitter:description" content="很多时候业务系统中有定时任务或者定时超时处理的需求，当任务量很大时，需要维护大量的timer，或者进行低效的扫描，本文针对此类业务场景与大家分享一种高效实时的解决方式。">
 <meta name="twitter:image" content="http://ojb6w1er1.bkt.clouddn.com/2018-06-14-062000.jpg">
 
 <script>
@@ -392,7 +392,7 @@
       
 
       
-        <h2 id="description"><a href="#description" class="headerlink" title="description:"></a>description:</h2><blockquote class="blockquote-center"><br>很多时候业务系统中有定时任务或者定时超时处理的需求，当任务量很大时，需要维护大量的timer，或者进行低效的扫描，本文针对此类业务场景与大家分享一种高效实时的解决方式。<br></blockquote>
+        <blockquote class="blockquote-center"><br>很多时候业务系统中有定时任务或者定时超时处理的需求，当任务量很大时，需要维护大量的timer，或者进行低效的扫描，本文针对此类业务场景与大家分享一种高效实时的解决方式。<br></blockquote>
 
 
 
@@ -512,6 +512,10 @@
 
           <div class="post-nav-prev post-nav-item">
             
+              <a href="/2018/12/17/应用健康检查实现/" rel="prev" title="应用健康检查实现">
+                应用健康检查实现 <i class="fa fa-chevron-right"></i>
+              </a>
+            
           </div>
         </div>
       
@@ -624,7 +628,7 @@ var jiathis_config={
               
                 <a href="/archives">
               
-                  <span class="site-state-item-count">19</span>
+                  <span class="site-state-item-count">20</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
@@ -635,7 +639,7 @@ var jiathis_config={
               
               <div class="site-state-item site-state-categories">
                 <a href="/categories/index.html">
-                  <span class="site-state-item-count">7</span>
+                  <span class="site-state-item-count">8</span>
                   <span class="site-state-item-name">分类</span>
                 </a>
               </div>
@@ -646,7 +650,7 @@ var jiathis_config={
               
               <div class="site-state-item site-state-tags">
                 <a href="/tags/index.html">
-                  <span class="site-state-item-count">12</span>
+                  <span class="site-state-item-count">13</span>
                   <span class="site-state-item-name">标签</span>
                 </a>
               </div>
@@ -722,7 +726,7 @@ var jiathis_config={
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#description"><span class="nav-number">1.</span> <span class="nav-text">description:</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#缘起"><span class="nav-number">2.</span> <span class="nav-text">缘起</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#常见方案："><span class="nav-number">2.1.</span> <span class="nav-text">常见方案：</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#方案1不足："><span class="nav-number">2.1.0.1.</span> <span class="nav-text">方案1不足：</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#方案2不足："><span class="nav-number">2.1.0.2.</span> <span class="nav-text">方案2不足：</span></a></li></ol></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#解决方案"><span class="nav-number">3.</span> <span class="nav-text">解决方案</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#环形队列-时间轮"><span class="nav-number">3.0.1.</span> <span class="nav-text">环形队列+时间轮</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#方案优点"><span class="nav-number">3.0.2.</span> <span class="nav-text">方案优点</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#方案解析"><span class="nav-number">4.</span> <span class="nav-text">方案解析</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#优化设计"><span class="nav-number">4.0.1.</span> <span class="nav-text">优化设计</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#任务链表分区–加速单一链表提取"><span class="nav-number">4.0.2.</span> <span class="nav-text">任务链表分区–加速单一链表提取</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#集群管理—集群节点的自我识别"><span class="nav-number">4.0.3.</span> <span class="nav-text">集群管理—集群节点的自我识别</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#总结"><span class="nav-number">5.</span> <span class="nav-text">总结</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#缘起"><span class="nav-number">1.</span> <span class="nav-text">缘起</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#常见方案："><span class="nav-number">1.1.</span> <span class="nav-text">常见方案：</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#方案1不足："><span class="nav-number">1.1.0.1.</span> <span class="nav-text">方案1不足：</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#方案2不足："><span class="nav-number">1.1.0.2.</span> <span class="nav-text">方案2不足：</span></a></li></ol></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#解决方案"><span class="nav-number">2.</span> <span class="nav-text">解决方案</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#环形队列-时间轮"><span class="nav-number">2.0.1.</span> <span class="nav-text">环形队列+时间轮</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#方案优点"><span class="nav-number">2.0.2.</span> <span class="nav-text">方案优点</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#方案解析"><span class="nav-number">3.</span> <span class="nav-text">方案解析</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#优化设计"><span class="nav-number">3.0.1.</span> <span class="nav-text">优化设计</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#任务链表分区–加速单一链表提取"><span class="nav-number">3.0.2.</span> <span class="nav-text">任务链表分区–加速单一链表提取</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#集群管理—集群节点的自我识别"><span class="nav-number">3.0.3.</span> <span class="nav-text">集群管理—集群节点的自我识别</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#总结"><span class="nav-number">4.</span> <span class="nav-text">总结</span></a></li></ol></div>
             
 
           </div>
@@ -765,6 +769,9 @@ var jiathis_config={
 
 
 
+<div style="width:300px;margin:0 auto; padding:5px 0;">
+  <a target="_blank" href="http://www.beian.gov.cn/portal/registerSystemInfo?recordcode=33011002013655" style="display:inline-block;text-decoration:none;height:20px;line-height:20px;"><img src="/images/beianlogo.png" style="float:left;"/><p style="float:left;height:20px;line-height:20px;margin: 0px 0px 0px 5px; color:#939393;">浙公网安备 33011002013655号</p></a>
+</div>
         
 
 

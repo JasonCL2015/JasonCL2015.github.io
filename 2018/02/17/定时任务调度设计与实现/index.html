@@ -89,17 +89,17 @@
 <meta property="og:site_name" content="JasonCui&#39;s blog">
 <meta property="og:description" content="很多时候业务系统中有定时任务或者定时超时处理的需求，当任务量很大时，需要维护大量的timer，或者进行低效的扫描，本文针对此类业务场景与大家分享一种高效实时的解决方式。">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:image" content="http://ojb6w1er1.bkt.clouddn.com/2018-06-14-062000.jpg">
-<meta property="og:image" content="http://ojb6w1er1.bkt.clouddn.com/2018-06-14-073316.png">
-<meta property="og:image" content="http://ojb6w1er1.bkt.clouddn.com/2018-06-14-085742.png">
-<meta property="og:image" content="http://ojb6w1er1.bkt.clouddn.com/2018-06-14-092642.png">
-<meta property="og:image" content="http://ojb6w1er1.bkt.clouddn.com/2018-06-14-093959.png">
-<meta property="og:image" content="http://ojb6w1er1.bkt.clouddn.com/2018-06-14-093934.png">
-<meta property="og:updated_time" content="2018-12-25T06:23:54.020Z">
+<meta property="og:image" content="http://img.jasoncui.online/2018-06-14-062000.jpg">
+<meta property="og:image" content="http://img.jasoncui.online/2018-06-14-073316.png">
+<meta property="og:image" content="http://img.jasoncui.online/2018-06-14-085742.png">
+<meta property="og:image" content="http://img.jasoncui.online/2018-06-14-092642.png">
+<meta property="og:image" content="http://img.jasoncui.online/2018-06-14-093959.png">
+<meta property="og:image" content="http://img.jasoncui.online/2018-06-14-093934.png">
+<meta property="og:updated_time" content="2019-01-09T04:06:39.344Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="定时任务调度设计与实现">
 <meta name="twitter:description" content="很多时候业务系统中有定时任务或者定时超时处理的需求，当任务量很大时，需要维护大量的timer，或者进行低效的扫描，本文针对此类业务场景与大家分享一种高效实时的解决方式。">
-<meta name="twitter:image" content="http://ojb6w1er1.bkt.clouddn.com/2018-06-14-062000.jpg">
+<meta name="twitter:image" content="http://img.jasoncui.online/2018-06-14-062000.jpg">
 
 <script>
     (function(){
@@ -407,24 +407,24 @@
 <p>​    3，时效性不够好，如果每小时轮询一次，最差的情况下，时间误差会达到1小时。</p>
 <p>​    4，如果通过增加cron轮询频率来减少上面的时间误差，那轮询效率和重复计算的问题会进一步凸显。</p>
 <h5 id="方案2不足："><a href="#方案2不足：" class="headerlink" title="方案2不足："></a>方案2不足：</h5><p>​    每个任务启动一个timer，比较耗资源，特别是在线量很大时，很容易CPU100%。</p>
-<h2 id="解决方案"><a href="#解决方案" class="headerlink" title="解决方案"></a>解决方案</h2><h4 id="环形队列-时间轮"><a href="#环形队列-时间轮" class="headerlink" title="环形队列+时间轮"></a>环形队列+时间轮</h4><p><img src="http://ojb6w1er1.bkt.clouddn.com/2018-06-14-062000.jpg" alt="img"></p>
+<h2 id="解决方案"><a href="#解决方案" class="headerlink" title="解决方案"></a>解决方案</h2><h4 id="环形队列-时间轮"><a href="#环形队列-时间轮" class="headerlink" title="环形队列+时间轮"></a>环形队列+时间轮</h4><p><img src="http://img.jasoncui.online/2018-06-14-062000.jpg" alt="img"></p>
 <p>​    先对本图做个简单的解释，图中包含一个环形队列和多个任务集合，环形队列中每个slot对应一个时间单位，可以是小时、分钟、秒等，每个slot下挂着一个Set<task>，用于存储待处理任务。当timer启动后，假设每隔1秒在环形队列中移动一格，当currentIndex指向一个slot时，可以检测该slot下有无待处理任务。在Set中的Task具备两个重要属性：cycleNum（当currentIndex第几圈扫描到这个slot时执行任务），taskFunction（需要执行的任务指针）。</task></p>
 <p>​    所以当需要触发一个延时任务时，我们只需做到两点：1，计算这个Task应该放在哪一个slot；2，计算这个Task的cycleNum，假设环形队列设置为3600格，currentIndex每秒移动一格，那任务希望3610秒后执行，则3610/3600=1，cycleNum=1，该task放入第10个slot中。</p>
 <h4 id="方案优点"><a href="#方案优点" class="headerlink" title="方案优点"></a>方案优点</h4><p>​    1，无需再轮询全部业务订单，效率高。</p>
 <p>​    2，一个订单，任务只执行一次。</p>
 <p>​    3，时效性好，精确到秒（控制timer移动频率可以控制精度）。</p>
-<h2 id="方案解析"><a href="#方案解析" class="headerlink" title="方案解析"></a>方案解析</h2><p><img src="http://ojb6w1er1.bkt.clouddn.com/2018-06-14-073316.png" alt="b352d7733bcc234ea2f968840d1eeac67a34fb81"></p>
+<h2 id="方案解析"><a href="#方案解析" class="headerlink" title="方案解析"></a>方案解析</h2><p><img src="http://img.jasoncui.online/2018-06-14-073316.png" alt="b352d7733bcc234ea2f968840d1eeac67a34fb81"></p>
 <p>​    上图的方案优点在于将任务的存储和时间进行解耦，而以什么方式存储任务数据则是该方案的关键。在RocketMQ（商业版）中的实现是将任务数据以链表的方式写入磁盘，每个任务中都有一个指向下一个任务的磁盘offset，只要拿到链表的头就可以获取整个任务链表，但该方案的缺点是部署时需要依赖硬盘，在当前容器化以及容量动态扩容的趋势下，一个普通应用依赖一块固定磁盘，对运维和部署带来额外复杂度。</p>
 <h4 id="优化设计"><a href="#优化设计" class="headerlink" title="优化设计"></a>优化设计</h4><p>​    基于上述问题，存储方式可以改为以Hbase，Redis来存储结构化数据，将上述磁盘offset换成任务ID，时间轮上关联链表头的ID，从而解耦对磁盘的依赖。于是方案变成下图：</p>
-<p><img src="http://ojb6w1er1.bkt.clouddn.com/2018-06-14-085742.png" alt="img"></p>
+<p><img src="http://img.jasoncui.online/2018-06-14-085742.png" alt="img"></p>
 <p>​    该方案至此在数据量不是很大的应用中已经够用，但在大量数据下时依然存在以下问题：</p>
 <p>​    1，单一链表无法并行提取，从而影响提取效率，对于某个时刻有大量定时任务的时候，定时任务处理的延迟会比较严重。</p>
 <p>​    2，在调度集群服务中各个节点拥有自己的时间轮，那么在集群里面每个节点重启之后如何恢复？集群扩容&amp;缩容如何自动管理？</p>
 <h4 id="任务链表分区–加速单一链表提取"><a href="#任务链表分区–加速单一链表提取" class="headerlink" title="任务链表分区–加速单一链表提取"></a>任务链表分区–加速单一链表提取</h4><p>​    链表的好处是在内存中不用存储整个任务列表，只需要存储简单的ID，这样减少了内存的消耗，但单一链表提取效率有限，这里利用分区原理，将某个时刻的单一链表通过分区的方式拆分成多个链表，当将某个时间点的任务提取的时候，可以根据链表集合大小来并行处理，从而加速整个任务提取的速度。所以方案演变成下图</p>
-<p><img src="http://ojb6w1er1.bkt.clouddn.com/2018-06-14-092642.png" alt="img"></p>
+<p><img src="http://img.jasoncui.online/2018-06-14-092642.png" alt="img"></p>
 <h4 id="集群管理—集群节点的自我识别"><a href="#集群管理—集群节点的自我识别" class="headerlink" title="集群管理—集群节点的自我识别"></a>集群管理—集群节点的自我识别</h4><p>​    在集群部署后节点重启后如何进行恢复？比如需要知道重启之前的时间轮刻度，需要知道重启之间时间轮刻度上的定时任务链表数据等，这里统一称之为时间轮元数据。由于各节点都是无状态的，所以各节点启动的时候，并不知道如何从存储服务中读取属于自己的元数据，这里就需要给集群中每个节点分配一个逻辑ID（因为动态扩容缩容问题，无法给每个节点分配固定IP或mac地址，奢侈），每个节点可以根据逻辑ID去存储服务获取对应的元数据。</p>
-<p>​    自此引出一个问题，逻辑ID如何分配？那么集群中节点就要选举一个Master节点，由Master来统一分配逻辑ID，集群启动注册和分配ID过程如下图<img src="http://ojb6w1er1.bkt.clouddn.com/2018-06-14-093959.png" alt="img"></p>
-<p>​    在解决了集群节点获取元数据问题之后，可能会出现另一个问题，那就是某个时刻某个节点的到期任务量较大，从而导致集群中该节点的压力很大，为了能够合理利用集群计算能力，该方案可以进一步优化：将提取的到期任务链表集合通过软负载的方式分发给集群其他节点，同时由于任务的数据是集中存储的，只要其他节点能够拿到任务链表头的ID，便可以提取到该链表的所有任务，从而集群的压力也将被平摊。以下是该方案交互过程：<img src="http://ojb6w1er1.bkt.clouddn.com/2018-06-14-093934.png" alt="27e57afae8c16a21242aa5d82e710be784a9100c"></p>
+<p>​    自此引出一个问题，逻辑ID如何分配？那么集群中节点就要选举一个Master节点，由Master来统一分配逻辑ID，集群启动注册和分配ID过程如下图<img src="http://img.jasoncui.online/2018-06-14-093959.png" alt="img"></p>
+<p>​    在解决了集群节点获取元数据问题之后，可能会出现另一个问题，那就是某个时刻某个节点的到期任务量较大，从而导致集群中该节点的压力很大，为了能够合理利用集群计算能力，该方案可以进一步优化：将提取的到期任务链表集合通过软负载的方式分发给集群其他节点，同时由于任务的数据是集中存储的，只要其他节点能够拿到任务链表头的ID，便可以提取到该链表的所有任务，从而集群的压力也将被平摊。以下是该方案交互过程：<img src="http://img.jasoncui.online/2018-06-14-093934.png" alt="27e57afae8c16a21242aa5d82e710be784a9100c"></p>
 <h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>​    在对该方案的解析过程中，我们发现该调度系统需要解决以下几个难点：</p>
 <p>​    1，时间轮算法实现</p>
 <p>​    2，任务链表和任务数据存储、任务链表分区、提取、删除。</p>

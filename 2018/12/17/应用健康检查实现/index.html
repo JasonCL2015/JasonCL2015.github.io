@@ -89,13 +89,13 @@
 <meta property="og:site_name" content="JasonCui&#39;s blog">
 <meta property="og:description" content="微服务盛行的当下，对于应用的稳定性要求越来越高，随着项目数量激增，各种环境问题逐渐让人头疼，针对这种情况，我们需要一个能够主动发现应用健康问题的监控平台。">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:image" content="http://pk8h6bl8s.bkt.clouddn.com/15456427033664.jpg">
+<meta property="og:image" content="http://jasoncui.com/2018/12/17/应用健康检查实现/media/15456427033664-1.jpg">
 <meta property="og:image" content="http://jasoncui.com/2018/12/17/应用健康检查实现/media/15456971965000.png">
-<meta property="og:updated_time" content="2018-12-25T06:22:45.706Z">
+<meta property="og:updated_time" content="2019-01-09T04:06:40.833Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="应用健康检查实现">
 <meta name="twitter:description" content="微服务盛行的当下，对于应用的稳定性要求越来越高，随着项目数量激增，各种环境问题逐渐让人头疼，针对这种情况，我们需要一个能够主动发现应用健康问题的监控平台。">
-<meta name="twitter:image" content="http://pk8h6bl8s.bkt.clouddn.com/15456427033664.jpg">
+<meta name="twitter:image" content="http://jasoncui.com/2018/12/17/应用健康检查实现/media/15456427033664-1.jpg">
 
 <script>
     (function(){
@@ -394,8 +394,8 @@
 
 <a id="more"></a>
 <h2 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h2><p>随着公司的不断发展，内部项目越来越多，在诸多测试环境中部署运行时，经常碰到环境不通，应用服务没成功响应请求的情况，导致测试进度一再延期，提测期间运维投入精力较大。归根结底，我们对于已部署成功的应用缺乏及时有效全面的健康检查，导致出问题时被动解决。为解决这一困扰，我决定开发一套健康检查监控平台，以达到及时监控各环境的应用运行状况，主动发现环境问题的目的。</p>
-<h2 id="设计图"><a href="#设计图" class="headerlink" title="设计图"></a>设计图</h2><p><img src="http://pk8h6bl8s.bkt.clouddn.com/15456427033664.jpg" alt=""></p>
-<h2 id="实现"><a href="#实现" class="headerlink" title="实现"></a>实现</h2><p>健康检查监控平台的实现主要基于Spring Boot Actuator + Micrometer + Promethus + Grafana技术栈。以下逐步讲解如何基于这些技术栈搭建一套应用健康检查监控平台。因为SpringBoot在2.0中已经集成Micrometer，对我们输出Promethus规范的数据帮助很大，但本文是基于SpringBoot1.5.x的实现，所以有必要提一下Micrometer。</p>
+<h2 id="设计图"><a href="#设计图" class="headerlink" title="设计图"></a>设计图</h2><p><img src="media/15456427033664-1.jpg" alt="15456427033664"></p>
+<h2 id="实现"><a href="#实现" class="headerlink" title="实现"></a>实现</h2><p>健康检查监控平台的实现主要基于Spring Boot Actuator + Micrometer 1 Promethus + Grafana技术栈。以下逐步讲解如何基于这些技术栈搭建一套应用健康检查监控平台。因为SpringBoot在2.0中已经集成Micrometer，对我们输出Promethus规范的数据帮助很大，但本文是基于SpringBoot1.5.x的实现，所以有必要提一下Micrometer。</p>
 <h3 id="应用健康数据搜集–Spring-Boot-Actuator"><a href="#应用健康数据搜集–Spring-Boot-Actuator" class="headerlink" title="应用健康数据搜集–Spring Boot Actuator"></a>应用健康数据搜集–Spring Boot Actuator</h3><p>  Spring Boot 提供了很多可选功能帮助我们在生产环境下监控应用健康状态，可使用HTTP endpoints，JMX甚至SSH方式访问。为兼容历史Spring MVC应用，本文采用HTTP endpoints访问方式进行数据采集。<br>  首先引入actuator依赖<br><figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.springframework.boot<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>spring-boot-starter-actuator<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br></pre></td></tr></table></figure></p>
 <p>or<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">dependencies &#123;</span><br><span class="line">	compile(<span class="string">"org.springframework.boot:spring-boot-starter-actuator"</span>)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
 <p>加入以上依赖后，我们会发现应用在启动日志中会出现很多mapping,例如/health,/info,/metrics等，这些是actuator提供的endpoints。我们这里需要用到的是/prometheus，一个将metrics信息以prometheus能够解析的风格暴露出来的路由。为了端点访问安全起见，我们需要给enpoints加上security验证，通知关闭不需要的endpoints。配置如下：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">endpoints.enabled=<span class="keyword">false</span></span><br><span class="line">endpoints.prometheus.enabled=<span class="keyword">true</span></span><br><span class="line">management.security.enabled=<span class="keyword">true</span></span><br><span class="line">security.user.name=admin</span><br><span class="line">security.user.password=admin</span><br></pre></td></tr></table></figure></p>

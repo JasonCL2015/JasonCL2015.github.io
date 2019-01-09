@@ -89,20 +89,20 @@
 <meta property="og:site_name" content="JasonCui&#39;s blog">
 <meta property="og:description" content="compose是用来在docker中定义和运行复杂应用的小工具,比如在一个文件中定义多个容器,只用一行命令就可以让一切就绪并运行.">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:image" content="http://ojb6w1er1.bkt.clouddn.com/%E5%AE%89%E8%A3%85dockercompose.png">
-<meta property="og:image" content="http://ojb6w1er1.bkt.clouddn.com/%E5%AE%89%E8%A3%85dockercompose2.png">
-<meta property="og:image" content="http://ojb6w1er1.bkt.clouddn.com/%E5%AE%89%E8%A3%85dockercompose3.png">
-<meta property="og:image" content="http://ojb6w1er1.bkt.clouddn.com/%E5%AE%89%E8%A3%85dockercompose4.png">
-<meta property="og:image" content="http://ojb6w1er1.bkt.clouddn.com/%E5%AE%89%E8%A3%85dockercompose5.png">
-<meta property="og:image" content="http://ojb6w1er1.bkt.clouddn.com/%E5%AE%89%E8%A3%85dockercompose6.png">
-<meta property="og:image" content="http://ojb6w1er1.bkt.clouddn.com/%E5%AE%89%E8%A3%85dockercompose7.png">
-<meta property="og:image" content="http://ojb6w1er1.bkt.clouddn.com/%E5%AE%89%E8%A3%85dockercompose8.png">
-<meta property="og:image" content="http://ojb6w1er1.bkt.clouddn.com/%E5%AE%89%E8%A3%85dockercompose9.png">
-<meta property="og:updated_time" content="2018-03-10T07:58:34.000Z">
+<meta property="og:image" content="http://img.jasoncui.online/%E5%AE%89%E8%A3%85dockercompose.png">
+<meta property="og:image" content="http://img.jasoncui.online/%E5%AE%89%E8%A3%85dockercompose2.png">
+<meta property="og:image" content="http://img.jasoncui.online/%E5%AE%89%E8%A3%85dockercompose3.png">
+<meta property="og:image" content="http://img.jasoncui.online/%E5%AE%89%E8%A3%85dockercompose4.png">
+<meta property="og:image" content="http://img.jasoncui.online/%E5%AE%89%E8%A3%85dockercompose5.png">
+<meta property="og:image" content="http://img.jasoncui.online/%E5%AE%89%E8%A3%85dockercompose6.png">
+<meta property="og:image" content="http://img.jasoncui.online/%E5%AE%89%E8%A3%85dockercompose7.png">
+<meta property="og:image" content="http://img.jasoncui.online/%E5%AE%89%E8%A3%85dockercompose8.png">
+<meta property="og:image" content="http://img.jasoncui.online/%E5%AE%89%E8%A3%85dockercompose9.png">
+<meta property="og:updated_time" content="2019-01-09T04:06:35.545Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="CentOS7安装docker-compose">
 <meta name="twitter:description" content="compose是用来在docker中定义和运行复杂应用的小工具,比如在一个文件中定义多个容器,只用一行命令就可以让一切就绪并运行.">
-<meta name="twitter:image" content="http://ojb6w1er1.bkt.clouddn.com/%E5%AE%89%E8%A3%85dockercompose.png">
+<meta name="twitter:image" content="http://img.jasoncui.online/%E5%AE%89%E8%A3%85dockercompose.png">
 
 <script>
     (function(){
@@ -400,14 +400,14 @@
 
 
 <a id="more"></a>
-<p>###安装pip:<br><img src="http://ojb6w1er1.bkt.clouddn.com/%E5%AE%89%E8%A3%85dockercompose.png" alt="此处输入图片的描述"><br>这里显示，找不到相应的包？？<br>说没有python-pip软件包可以安装。<br>这是因为像centos这类衍生出来的发行版，他们的源有时候内容更新的比较滞后，或者说有时候一些扩展的源根本就没有。<br>所以在使用yum来search python-pip的时候，会说没有找到该软件包。因此为了能够安装这些包，需要先安装扩展源EPEL。<br>EPEL(<a href="http://fedoraproject.org/wiki/EPEL" target="_blank" rel="noopener">http://fedoraproject.org/wiki/EPEL</a>) 是由 Fedora 社区打造，为 RHEL 及衍生发行版如 CentOS、Scientific Linux 等提供高质量软件包的项目。<br>首先安装epel扩展源：<br>  <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo yum -y install epel-release</span><br></pre></td></tr></table></figure></p>
-<p>  <img src="http://ojb6w1er1.bkt.clouddn.com/%E5%AE%89%E8%A3%85dockercompose2.png" alt="此处输入图片的描述"><br>然后安装python-pip<br>  <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo yum install python2-pip.noarch</span><br></pre></td></tr></table></figure></p>
-<p>  <img src="http://ojb6w1er1.bkt.clouddn.com/%E5%AE%89%E8%A3%85dockercompose3.png" alt="此处输入图片的描述"><br>  <img src="http://ojb6w1er1.bkt.clouddn.com/%E5%AE%89%E8%A3%85dockercompose4.png" alt="此处输入图片的描述"></p>
+<p>###安装pip:<br><img src="http://img.jasoncui.online/%E5%AE%89%E8%A3%85dockercompose.png" alt="此处输入图片的描述"><br>这里显示，找不到相应的包？？<br>说没有python-pip软件包可以安装。<br>这是因为像centos这类衍生出来的发行版，他们的源有时候内容更新的比较滞后，或者说有时候一些扩展的源根本就没有。<br>所以在使用yum来search python-pip的时候，会说没有找到该软件包。因此为了能够安装这些包，需要先安装扩展源EPEL。<br>EPEL(<a href="http://fedoraproject.org/wiki/EPEL" target="_blank" rel="noopener">http://fedoraproject.org/wiki/EPEL</a>) 是由 Fedora 社区打造，为 RHEL 及衍生发行版如 CentOS、Scientific Linux 等提供高质量软件包的项目。<br>首先安装epel扩展源：<br>  <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo yum -y install epel-release</span><br></pre></td></tr></table></figure></p>
+<p>  <img src="http://img.jasoncui.online/%E5%AE%89%E8%A3%85dockercompose2.png" alt="此处输入图片的描述"><br>然后安装python-pip<br>  <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo yum install python2-pip.noarch</span><br></pre></td></tr></table></figure></p>
+<p>  <img src="http://img.jasoncui.online/%E5%AE%89%E8%A3%85dockercompose3.png" alt="此处输入图片的描述"><br>  <img src="http://img.jasoncui.online/%E5%AE%89%E8%A3%85dockercompose4.png" alt="此处输入图片的描述"></p>
 <p>###对安装好的pip进行一次升级<br>  <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo pip install --upgrade pip</span><br></pre></td></tr></table></figure></p>
-<p>  <img src="http://ojb6w1er1.bkt.clouddn.com/%E5%AE%89%E8%A3%85dockercompose5.png" alt="此处输入图片的描述"><br>安装docker-compose<br>  <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">pip install docker-compose</span><br></pre></td></tr></table></figure></p>
-<p>  <img src="http://ojb6w1er1.bkt.clouddn.com/%E5%AE%89%E8%A3%85dockercompose6.png" alt="此处输入图片的描述"><br>运行docker-compose<br><img src="http://ojb6w1er1.bkt.clouddn.com/%E5%AE%89%E8%A3%85dockercompose7.png" alt="此处输入图片的描述"></p>
+<p>  <img src="http://img.jasoncui.online/%E5%AE%89%E8%A3%85dockercompose5.png" alt="此处输入图片的描述"><br>安装docker-compose<br>  <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">pip install docker-compose</span><br></pre></td></tr></table></figure></p>
+<p>  <img src="http://img.jasoncui.online/%E5%AE%89%E8%A3%85dockercompose6.png" alt="此处输入图片的描述"><br>运行docker-compose<br><img src="http://img.jasoncui.online/%E5%AE%89%E8%A3%85dockercompose7.png" alt="此处输入图片的描述"></p>
 <p>出现报错<br>pkg_resources.DistributionNotFound: backports.ssl-match-hostname&gt;=3.5<br>使用pip 更新backports.ssl-match-hostname的版本<br>  <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">pip install --upgrade backports.ssl_match_hostname</span><br></pre></td></tr></table></figure></p>
-<p>更新backports.ssl_match_hostname 到3.5版本后问题解决<br><img src="http://ojb6w1er1.bkt.clouddn.com/%E5%AE%89%E8%A3%85dockercompose8.png" alt="此处输入图片的描述"><br><img src="http://ojb6w1er1.bkt.clouddn.com/%E5%AE%89%E8%A3%85dockercompose9.png" alt="此处输入图片的描述"></p>
+<p>更新backports.ssl_match_hostname 到3.5版本后问题解决<br><img src="http://img.jasoncui.online/%E5%AE%89%E8%A3%85dockercompose8.png" alt="此处输入图片的描述"><br><img src="http://img.jasoncui.online/%E5%AE%89%E8%A3%85dockercompose9.png" alt="此处输入图片的描述"></p>
 
       
     </div>

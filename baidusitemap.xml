@@ -5,6 +5,66 @@
     
     
   <url>
+    <loc>http://jasoncui.com/2018/11/13/HTTP%E7%8A%B6%E6%80%81%E7%A0%81%E6%A2%B3%E7%90%86/</loc>
+    <lastmod>2019-01-25T02:30:54.815Z</lastmod>
+    <data>
+        <display>
+        <title>HTTP状态码梳理</title>
+        <pubTime>2018-11-13T12:03:04.000Z</pubTime>
+        
+        <tag>Java</tag>
+         
+         
+           
+             
+              <breadCrumb title="Java" url="http://jasoncui.com/categories/Java/"/>
+          
+        </display>
+    </data>
+    </url>
+
+    
+  <url>
+    <loc>http://jasoncui.com/2018/11/15/TCP%E4%B8%8EUDP%E8%AF%A6%E8%A7%A3/</loc>
+    <lastmod>2019-01-16T07:35:38.309Z</lastmod>
+    <data>
+        <display>
+        <title>TCP与UDP详解</title>
+        <pubTime>2018-11-15T12:03:04.000Z</pubTime>
+        
+        <tag>Java</tag>
+         
+         
+           
+             
+              <breadCrumb title="Java" url="http://jasoncui.com/categories/Java/"/>
+          
+        </display>
+    </data>
+    </url>
+
+    
+  <url>
+    <loc>http://jasoncui.com/2018/12/19/%E7%BB%9F%E4%B8%80%E9%85%8D%E7%BD%AE%E4%B8%AD%E5%BF%83-Apollo%E9%85%8D%E7%BD%AE%E4%BD%BF%E7%94%A8/</loc>
+    <lastmod>2019-01-09T10:19:31.347Z</lastmod>
+    <data>
+        <display>
+        <title>配置中心-Apollo配置使用</title>
+        <pubTime>2018-12-19T12:03:04.000Z</pubTime>
+        
+        <tag>配置中心</tag>
+         
+         
+           
+             
+              <breadCrumb title="Java" url="http://jasoncui.com/categories/Java/"/>
+          
+        </display>
+    </data>
+    </url>
+
+    
+  <url>
     <loc>http://jasoncui.com/2018/12/17/%E5%BA%94%E7%94%A8%E5%81%A5%E5%BA%B7%E6%A3%80%E6%9F%A5%E5%AE%9E%E7%8E%B0/</loc>
     <lastmod>2019-01-09T04:39:20.618Z</lastmod>
     <data>
@@ -345,26 +405,6 @@
 
     
   <url>
-    <loc>http://jasoncui.com/2016/11/24/Docker%20Logging%20via%20EFK/</loc>
-    <lastmod>2018-03-10T07:58:18.000Z</lastmod>
-    <data>
-        <display>
-        <title>Docker Logging via EFK (Elasticsearch + Fluentd + Kibana) Stack with Docker Compose</title>
-        <pubTime>2016-11-24T13:02:44.000Z</pubTime>
-        
-        <tag>Docker日志</tag>
-         
-         
-           
-             
-              <breadCrumb title="Docker" url="http://jasoncui.com/categories/Docker/"/>
-          
-        </display>
-    </data>
-    </url>
-
-    
-  <url>
     <loc>http://jasoncui.com/2016/09/18/Ubuntu16%E5%AE%89%E8%A3%85rtx/</loc>
     <lastmod>2018-03-10T07:58:18.000Z</lastmod>
     <data>
@@ -398,6 +438,26 @@
            
              
               <breadCrumb title="基础" url="http://jasoncui.com/categories/%E5%9F%BA%E7%A1%80/"/>
+          
+        </display>
+    </data>
+    </url>
+
+    
+  <url>
+    <loc>http://jasoncui.com/2016/11/24/Docker%20Logging%20via%20EFK/</loc>
+    <lastmod>2018-03-10T07:58:18.000Z</lastmod>
+    <data>
+        <display>
+        <title>Docker Logging via EFK (Elasticsearch + Fluentd + Kibana) Stack with Docker Compose</title>
+        <pubTime>2016-11-24T13:02:44.000Z</pubTime>
+        
+        <tag>Docker日志</tag>
+         
+         
+           
+             
+              <breadCrumb title="Docker" url="http://jasoncui.com/categories/Docker/"/>
           
         </display>
     </data>

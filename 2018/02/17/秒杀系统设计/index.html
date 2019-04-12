@@ -68,7 +68,7 @@
 
 
 
-  <meta name="keywords" content="https,ssl,tsl" />
+  <meta name="keywords" content="Java,高并发" />
 
 
 
@@ -81,18 +81,18 @@
 
 
 
-<meta name="description" content="为了保证这些隐私数据能加密传输，网景公司设计了SSL（Secure Sockets Layer）协议用于对HTTP协议传输的数据进行加密，从而就诞生了HTTPS。">
-<meta name="keywords" content="https,ssl,tsl">
+<meta name="description" content="梳理一下关于秒杀逻辑的系统架构设计和各个环节的优化方案注意点。">
+<meta name="keywords" content="Java,高并发">
 <meta property="og:type" content="article">
-<meta property="og:title" content="HTTPS原理">
-<meta property="og:url" content="http://jasoncui.com/2016/12/01/HTTPS原理/index.html">
+<meta property="og:title" content="秒杀系统设计">
+<meta property="og:url" content="http://jasoncui.com/2018/02/17/秒杀系统设计/index.html">
 <meta property="og:site_name" content="JasonCui&#39;s blog">
-<meta property="og:description" content="为了保证这些隐私数据能加密传输，网景公司设计了SSL（Secure Sockets Layer）协议用于对HTTP协议传输的数据进行加密，从而就诞生了HTTPS。">
+<meta property="og:description" content="梳理一下关于秒杀逻辑的系统架构设计和各个环节的优化方案注意点。">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2018-03-10T07:58:18.000Z">
+<meta property="og:updated_time" content="2019-02-22T15:49:54.917Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="HTTPS原理">
-<meta name="twitter:description" content="为了保证这些隐私数据能加密传输，网景公司设计了SSL（Secure Sockets Layer）协议用于对HTTP协议传输的数据进行加密，从而就诞生了HTTPS。">
+<meta name="twitter:title" content="秒杀系统设计">
+<meta name="twitter:description" content="梳理一下关于秒杀逻辑的系统架构设计和各个环节的优化方案注意点。">
 
 <script>
     (function(){
@@ -132,13 +132,13 @@
 
 
 
-  <link rel="canonical" href="http://jasoncui.com/2016/12/01/HTTPS原理/"/>
+  <link rel="canonical" href="http://jasoncui.com/2018/02/17/秒杀系统设计/"/>
 
 
 
 
 
-  <title>HTTPS原理 | JasonCui's blog</title>
+  <title>秒杀系统设计 | JasonCui's blog</title>
   
 
 
@@ -275,7 +275,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://jasoncui.com/2016/12/01/HTTPS原理/">
+    <link itemprop="mainEntityOfPage" href="http://jasoncui.com/2018/02/17/秒杀系统设计/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="JasonCui">
@@ -292,7 +292,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">HTTPS原理</h1>
+          <h1 class="post-title" itemprop="name headline">秒杀系统设计</h1>
         
 
         <div class="post-meta">
@@ -304,8 +304,8 @@
               
                 <span class="post-meta-item-text">发表于</span>
               
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2016-12-01T09:45:07+08:00">
-                2016-12-01
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-02-17T21:00:08+08:00">
+                2018-02-17
               </time>
             
 
@@ -327,8 +327,8 @@
               
               
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/基础/" itemprop="url" rel="index">
-                    <span itemprop="name">基础</span>
+                  <a href="/categories/Java/" itemprop="url" rel="index">
+                    <span itemprop="name">Java</span>
                   </a>
                 </span>
 
@@ -345,9 +345,9 @@
                 <span class="post-meta-item-icon">
                   <i class="fa fa-comment-o"></i>
                 </span>
-                <a href="/2016/12/01/HTTPS原理/#comments" itemprop="discussionUrl">
+                <a href="/2018/02/17/秒杀系统设计/#comments" itemprop="discussionUrl">
                   <span class="post-comments-count disqus-comment-count"
-                        data-disqus-identifier="2016/12/01/HTTPS原理/" itemprop="commentCount"></span>
+                        data-disqus-identifier="2018/02/17/秒杀系统设计/" itemprop="commentCount"></span>
                 </a>
               </span>
             
@@ -355,7 +355,7 @@
 
           
           
-             <span id="/2016/12/01/HTTPS原理/" class="leancloud_visitors" data-flag-title="HTTPS原理">
+             <span id="/2018/02/17/秒杀系统设计/" class="leancloud_visitors" data-flag-title="秒杀系统设计">
                <span class="post-meta-divider">|</span>
                <span class="post-meta-item-icon">
                  <i class="fa fa-eye"></i>
@@ -386,18 +386,79 @@
       
 
       
-        <blockquote class="blockquote-center"><br>为了保证这些隐私数据能加密传输，网景公司设计了SSL（Secure Sockets Layer）协议用于对HTTP协议传输的数据进行加密，从而就诞生了HTTPS。<br></blockquote>
+        <blockquote class="blockquote-center"><br>梳理一下关于秒杀逻辑的系统架构设计和各个环节的优化方案注意点。<br></blockquote>
 
 
 
 <a id="more"></a>
-<h2 id="一、HTTPS原理"><a href="#一、HTTPS原理" class="headerlink" title="一、HTTPS原理"></a>一、HTTPS原理</h2><p>为了保证这些隐私数据能加密传输，网景公司设计了SSL（Secure Sockets Layer）协议用于对HTTP协议传输的数据进行加密，从而就诞生了HTTPS。<br>HTTPS在传输数据之前需要客户端（浏览器）与服务端（网站）之间进行一次握手，在握手过程中将确立双方加密传输数据的密码信息。TLS/SSL协议不仅仅是一套加密传输的协议，更是一件经过艺术家精心设计的艺术品，TLS/SSL中使用了非对称加密，对称加密以及HASH算法。握手过程的简单描述如下：<br>1.浏览器将自己支持的一套加密规则发送给网站。<br>2.网站从中选出一组加密算法与HASH算法，并将自己的身份信息以证书的形式发回给浏览器。证书里面包含了网站地址，加密公钥，以及证书的颁发机构等信息。<br>3.获得网站证书之后浏览器要做以下工作：<br>a) 验证证书的合法性（颁发证书的机构是否合法，证书中包含的网站地址是否与正在访问的地址一致等），如果证书受信任，则浏览器栏里面会显示一个小锁头，否则会给出证书不受信的提示。<br>b) 如果证书受信任，或者是用户接受了不受信的证书，浏览器会生成一串随机数的密码，并用证书中提供的公钥加密。<br>c) 使用约定好的HASH计算握手消息，并使用生成的随机数对消息进行加密，最后将之前生成的所有信息发送给网站。<br>4.网站接收浏览器发来的数据之后要做以下的操作：<br>a) 使用自己的私钥将信息解密取出密码，使用密码解密浏览器发来的握手消息，并验证HASH是否与浏览器发来的一致。<br>b) 使用密码加密一段握手消息，发送给浏览器。<br>5.浏览器解密并计算握手消息的HASH，如果与服务端发来的HASH一致，此时握手过程结束，之后所有的通信数据将由之前浏览器生成的随机密码并利用对称加密算法进行加密。<br>这里浏览器与网站互相发送加密的握手消息并验证，目的是为了保证双方都获得了一致的密码，并且可以正常的加密解密数据，为后续真正数据的传输做一次测试。另外，HTTPS一般使用的加密与HASH算法如下：<br>非对称加密算法：RSA，DSA/DSS<br>对称加密算法：AES，RC4，3DES<br>HASH算法：MD5，SHA1，SHA256<br>其中非对称加密算法用于在握手过程中加密生成的密码，对称加密算法用于对真正传输的数据进行加密，而HASH算法用于验证数据的完整性。由于浏览器生成的密码是整个数据加密的关键，因此在传输的时候使用了非对称加密算法对其加密。非对称加密算法会生成公钥和私钥，公钥只能用于加密数据，因此可以随意传输，而网站的私钥用于对数据进行解密，所以网站都会非常小心的保管自己的私钥，防止泄漏。</p>
-<blockquote>
-<p>参考阅读</p>
-<ul>
-<li><a href="http://www.guokr.com/post/114121/" target="_blank" rel="noopener">HTTPS那些事（一）HTTPS原理</a></li>
+<h2 id="整体思路"><a href="#整体思路" class="headerlink" title="整体思路"></a>整体思路</h2><ol>
+<li><p>将请求拦截在系统上游，降低下游压力：秒杀系统特点是并发量极大，但实际秒杀成功的请求数量却很少，所以如果不在前端拦截很可能造成数据库读写锁冲突，甚至导致死锁，最终请求超时。</p>
+</li>
+<li><p>充分利用缓存(redis)：利用缓存可极大提高系统读写速度。</p>
+</li>
+<li><p>消息中间件(ActiveMQ、Kafka等)：消息队列可以削峰，将拦截大量并发请求，这也是一个异步处理过程，后台业务根据自己的处理能力，从消息队列中主动的拉取请求消息进行业务处理。</p>
+</li>
+</ol>
+<h2 id="前端设计方案"><a href="#前端设计方案" class="headerlink" title="前端设计方案"></a>前端设计方案</h2><ul>
+<li><p>页面静态化：将活动页面上的所有可以静态的元素全部静态化，并尽量减少动态元素，通过<strong><em>CDN</em></strong>来抗峰值。</p>
+</li>
+<li><p>静止重复提交：用户提交请求后，按钮置灰。</p>
+</li>
+<li><p>用户限流：在某一时间段内只允许用户提交一次请求，比如可以采取IP限流</p>
+</li>
 </ul>
-</blockquote>
+<h2 id="后端设计方案"><a href="#后端设计方案" class="headerlink" title="后端设计方案"></a>后端设计方案</h2><h3 id="服务端控制器层-网关层"><a href="#服务端控制器层-网关层" class="headerlink" title="服务端控制器层(网关层)"></a>服务端控制器层(网关层)</h3><ul>
+<li><p>限制uid（UserID）访问频率：我们上面拦截了浏览器访问的请求，但针对某些恶意攻击或其它插件，在服务端控制层需要针对同一个访问uid，限制访问频率。</p>
+</li>
+<li><p>用户行为识别：</p>
+</li>
+</ul>
+<ol>
+<li>实时人机识别: 在用户请求过程中，正常用户跟机器的请求数据会有差异，如果请求数据跟实际的数据不一致，通过实时的识别，自然就可以将这个请求标识为非法请求，直接拦截。</li>
+<li>风控列表：除了实时的人机识别，根据还可以根据一些账号或者 ip 平时的购物等行为进行用户画像识别出其中的黄牛，机器账号等等，维持着一个列表，对于列表中的账号可以按风险等级进行额外的拦截。</li>
+</ol>
+<h3 id="服务层"><a href="#服务层" class="headerlink" title="服务层"></a>服务层</h3><p>上面只拦截了一部分访问请求，当秒杀的用户量很大时，即使每个用户只有一个请求，到服务层的请求数量还是很大。比如我们有100W用户同时抢100台手机，服务层并发请求压力至少为100W。</p>
+<ul>
+<li><p>采用消息队列缓存请求：既然服务层知道库存只有100台手机，那完全没有必要把100W个请求都传递到数据库啊，那么可以先把这些请求都写到消息队列缓存一下，数据库层订阅消息减库存，减库存成功的请求返回秒杀成功，失败的返回秒杀结束。</p>
+</li>
+<li><p>利用缓存应对读请求：比如双11秒杀抢购，是典型的读多写少业务，大部分请求是查询请求，所以可以利用缓存分担数据库压力。</p>
+</li>
+<li><p>利用缓存应对写请求：缓存也是可以应对写请求的，比如我们就可以把数据库中的库存数据转移到Redis缓存中，所有减库存操作都在Redis中进行，然后再通过后台进程把Redis中的用户秒杀请求同步到数据库中。</p>
+</li>
+</ul>
+<h3 id="数据库层"><a href="#数据库层" class="headerlink" title="数据库层"></a>数据库层</h3><p>数据库层是最脆弱的一层，一般在应用设计时在上游就需要把请求拦截掉，数据库层只承担“能力范围内”的访问请求。所以，上面通过在服务层引入队列和缓存，让最底层的数据库高枕无忧。</p>
+<p>比如：利用消息中间件和缓存实现简单的秒杀系统<br>Redis是一个分布式缓存系统，支持多种数据结构，我们可以利用Redis轻松实现一个强大的秒杀系统。</p>
+<p>我们可以采用Redis 最简单的key-value数据结构，用一个原子类型的变量值(AtomicInteger)作为key，把用户id作为value，库存数量便是原子变量的最大值。对于每个用户的秒杀，我们使用 RPUSH key value插入秒杀请求， 当插入的秒杀请求数达到上限时，停止所有后续插入。</p>
+<p>然后我们可以在台启动多个工作线程，使用 LPOP key 读取秒杀成功者的用户id，然后再操作数据库做最终的下订单减库存操作。</p>
+<p>当然，上面Redis也可以替换成消息中间件如ActiveMQ、Kafka等，也可以将缓存和消息中间件 组合起来，缓存系统负责接收记录用户请求，消息中间件负责将缓存中的请求同步到数据库。</p>
+<p>无事务方式：</p>
+<ol>
+<li><p>乐观锁：在 update 时使用版本号的方式保证数据唯一性，比如在用户中奖后减少已有奖品数量。</p>
+</li>
+<li><p>唯一索引：在 insert 时通过唯一索引保证只插入一条数据，比如建立奖品 id 和用户 id 的唯一索引，防止 insert 时插入多条中奖记录。</p>
+</li>
+</ol>
+<p>升级硬盘为SSD,提高读写效率。</p>
+<h2 id="秒杀架构设计总结"><a href="#秒杀架构设计总结" class="headerlink" title="秒杀架构设计总结"></a>秒杀架构设计总结</h2><ul>
+<li><p>限流： 鉴于只有少部分用户能够秒杀成功，所以要限制大部分流量，只允许少部分流量进入服务后端。</p>
+</li>
+<li><p>削峰：对于秒杀系统瞬时会有大量用户涌入，所以在抢购一开始会有很高的瞬间峰值。高峰值流量是压垮系统很重要的原因，所以如何把瞬间的高流量变成一段时间平稳的流量也是设计秒杀系统很重要的思路。实现削峰的常用的方法有利用缓存和消息中间件等技术。</p>
+</li>
+</ul>
+<ol>
+<li><p>消息队列解决削峰<br>要对流量进行削峰，最容易想到的解决方案就是用消息队列来缓冲瞬时流量，把同步的直接调用转换成异步的间接推送，中间通过一个队列在一端承接瞬时的流量洪峰，在另一端平滑地将消息推送出去。</p>
+</li>
+<li><p>流量削峰漏斗：层层削峰<br>针对秒杀场景还有一种方法，就是对请求进行分层过滤，从而过滤掉一些无效的请求。<br>1）分层过滤的核心思想<br>通过在不同的层次尽可能地过滤掉无效请求。<br>通过CDN过滤掉大量的图片，静态资源的请求。<br>再通过类似Redis这样的分布式缓存，过滤请求等就是典型的在上游拦截读请求。<br>2）分层过滤的基本原则<br>对写数据进行基于时间的合理分片，过滤掉过期的失效请求。<br>对写请求做限流保护，将超出系统承载能力的请求过滤掉。<br>涉及到的读数据不做强一致性校验，减少因为一致性校验产生瓶颈的问题。<br>对写数据进行强一致性校验，只保留最后有效的数据。</p>
+</li>
+</ol>
+<ul>
+<li><p>异步处理：秒杀系统是一个高并发系统，采用异步处理模式可以极大地提高系统并发量，其实异步处理就是削峰的一种实现方式。</p>
+</li>
+<li><p>内存缓存：秒杀系统最大的瓶颈一般都是数据库读写，由于数据库读写属于磁盘IO，性能很低，如果能够把部分数据或业务逻辑转移到内存缓存，效率会有极大地提升。</p>
+</li>
+<li><p>可拓展：当然如果我们想支持更多用户，更大的并发，最好就将系统设计成弹性可拓展的，如果流量来了，拓展机器就好了。像淘宝、京东等双十一活动时会增加大量机器应对交易高峰。</p>
+</li>
+</ul>
 
       
     </div>
@@ -451,7 +512,7 @@
       
         <div class="post-tags">
           
-            <a href="/tags/Http/" rel="tag"># Http</a>
+            <a href="/tags/Java/" rel="tag"># Java</a>
           
         </div>
       
@@ -464,8 +525,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2016/11/24/Docker Logging via EFK/" rel="next" title="Docker Logging via EFK (Elasticsearch + Fluentd + Kibana) Stack with Docker Compose">
-                <i class="fa fa-chevron-left"></i> Docker Logging via EFK (Elasticsearch + Fluentd + Kibana) Stack with Docker Compose
+              <a href="/2018/01/17/爬虫抓取代理IP/" rel="next" title="爬虫抓取代理IP">
+                <i class="fa fa-chevron-left"></i> 爬虫抓取代理IP
               </a>
             
           </div>
@@ -474,8 +535,8 @@
 
           <div class="post-nav-prev post-nav-item">
             
-              <a href="/2016/12/19/分布式接口幂等性设计/" rel="prev" title="分布式接口幂等性设计">
-                分布式接口幂等性设计 <i class="fa fa-chevron-right"></i>
+              <a href="/2018/02/17/定时任务调度设计与实现/" rel="prev" title="定时任务调度设计与实现">
+                定时任务调度设计与实现 <i class="fa fa-chevron-right"></i>
               </a>
             
           </div>
@@ -691,7 +752,7 @@ var jiathis_config={
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#一、HTTPS原理"><span class="nav-number">1.</span> <span class="nav-text">一、HTTPS原理</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#整体思路"><span class="nav-number">1.</span> <span class="nav-text">整体思路</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#前端设计方案"><span class="nav-number">2.</span> <span class="nav-text">前端设计方案</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#后端设计方案"><span class="nav-number">3.</span> <span class="nav-text">后端设计方案</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#服务端控制器层-网关层"><span class="nav-number">3.1.</span> <span class="nav-text">服务端控制器层(网关层)</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#服务层"><span class="nav-number">3.2.</span> <span class="nav-text">服务层</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#数据库层"><span class="nav-number">3.3.</span> <span class="nav-text">数据库层</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#秒杀架构设计总结"><span class="nav-number">4.</span> <span class="nav-text">秒杀架构设计总结</span></a></li></ol></div>
             
 
           </div>
@@ -857,9 +918,9 @@ var jiathis_config={
     
       <script type="text/javascript">
         var disqus_config = function () {
-          this.page.url = 'http://jasoncui.com/2016/12/01/HTTPS原理/';
-          this.page.identifier = '2016/12/01/HTTPS原理/';
-          this.page.title = 'HTTPS原理';
+          this.page.url = 'http://jasoncui.com/2018/02/17/秒杀系统设计/';
+          this.page.identifier = '2018/02/17/秒杀系统设计/';
+          this.page.title = '秒杀系统设计';
         };
         var d = document, s = d.createElement('script');
         s.src = 'https://http-jasoncui-com.disqus.com/embed.js';

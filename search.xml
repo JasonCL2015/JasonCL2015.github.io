@@ -1,6 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
+    <title><![CDATA[aa]]></title>
+    <url>%2F2019%2F04%2F12%2Faa%2F</url>
+    <content type="text"></content>
+  </entry>
+  <entry>
     <title><![CDATA[配置中心-Apollo配置使用]]></title>
     <url>%2F2018%2F12%2F19%2F%E7%BB%9F%E4%B8%80%E9%85%8D%E7%BD%AE%E4%B8%AD%E5%BF%83-Apollo%E9%85%8D%E7%BD%AE%E4%BD%BF%E7%94%A8%2F</url>
     <content type="text"><![CDATA[微服务盛行的当下，对于应用的稳定性要求越来越高，随着项目数量激增，各种环境问题逐渐让人头疼，针对这种情况，我们需要一个能够主动发现应用健康问题的监控平台。]]></content>
